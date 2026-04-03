@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nhà Bi - Góc nhỏ an yên — Trang trí phong thủy</title>
+  <meta name="description"
+    content="Bộ sưu tập nghệ thuật phong thủy tinh xảo, mang bình an và thịnh vượng đến không gian sống." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- Top Bar -->
+  <div class="top-bar">Miễn phí vận chuyển cho đơn hàng từ 500.000₫</div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="store.html" class="logo"><span class="text-gold-gradient">Nhà Bi - Góc nhỏ an yên </span></a>
+      <nav class="nav-links">
+        <a href="#">Bộ sưu tập</a>
+        <a href="#">Bình An</a>
+        <a href="#">Tinh Hoa</a>
+        <a href="#">Về chúng tôi</a>
+      </nav>
+      <div class="header-actions">
+        <button class="cart-btn" onclick="toggleCart()">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <path d="M16 10a4 4 0 01-8 0" />
+          </svg>
+          <span class="cart-badge" id="cartCount">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <p class="hero-label">Bộ sưu tập</p>
+    <h1><span class="text-gold-gradient">Bình An</span></h1>
+    <p class="hero-desc">Những tác phẩm nghệ thuật phong thủy tinh xảo, mang năng lượng bình an và thịnh vượng đến không
+      gian sống của bạn.</p>
+  </section>
+
+  <!-- Main -->
+  <main class="container">
+    <!-- Filters -->
+    <div class="filters">
+      <div class="filter-chips">
+        <button class="chip active" onclick="filterBrand('')">Tất cả</button>
+        <button class="chip" onclick="filterBrand('Gocnha')">Gocnha</button>
+        <button class="chip" onclick="filterBrand('The YÊN')">The YÊN</button>
+        <button class="chip" onclick="filterBrand('Khác')">Khác</button>
+      </div>
+      <select class="sort-select" onchange="sortProducts(this.value)">
+        <option value="featured">Nổi bật</option>
+        <option value="price-asc">Giá: Thấp → Cao</option>
+        <option value="price-desc">Giá: Cao → Thấp</option>
+        <option value="name-asc">Tên: A → Z</option>
+      </select>
+      <p class="product-count" id="productCount">8 sản phẩm</p>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="product-grid" id="productGrid"></div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-logo"><span class="text-gold-gradient">Nhà Bi - Góc nhỏ an yên </span></div>
+      <p class="footer-tagline">Trang trí phong thủy — Mang bình an đến mọi nhà</p>
+      <div class="footer-links">
+        <a href="#">Giới thiệu</a>
+        <a href="#">Liên hệ</a>
+        <a href="#">Chính sách</a>
+        <a href="#">Hỗ trợ</a>
+      </div>
+      <p class="footer-copy">© 2026 Nhà Bi - Góc nhỏ an yên . Tất cả quyền được bảo lưu.</p>
+    </div>
+  </footer>
+
+  <!-- Cart Overlay -->
+  <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+  <aside class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+      <h3>Giỏ hàng</h3>
+      <button class="cart-close" onclick="toggleCart()">
+        <svg class="icon" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <p class="cart-empty">Giỏ hàng trống</p>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Tổng cộng</span>
+        <span class="total-price" id="cartTotal">0₫</span>
+      </div>
+      <button class="btn-checkout">Thanh toán</button>
+    </div>
+  </aside>
+
+  <script>
+    // ===== DATA =====
+    const products = [
+      {
+        id: "1",
+        name: "Trường Phong Mã",
+        original: 625000,
+        sale: 508000,
+        image: "./img/buddha.jpg",
+        rating: 4, reviews: 0, category: "Bình An", brand: "Gocnha"
+      },
+      {
+        id: "2",
+        name: "Ngưu Chấn Đỉnh",
+        original: 635000,
+        sale: 518000,
+        image: "./img/dragon.jpg",
+        rating: 5, reviews: 3, category: "Bình An", brand: "Gocnha"
+      },
+      {
+        id: "3",
+        name: "Song Lân Cung Chúc",
+        original: 15099000,
+        sale: 13579000,
+        image: "./img/horse.jpg",
+        rating: 5, reviews: 7, category: "Bình An", brand: "The YÊN"
+      },
+      {
+        id: "4",
+        name: "Sư Thầy An Nhiên",
+        original: 10000000,
+        sale: 8600000,
+        image: "./img/lion.jpg",
+        rating: 4, reviews: 1, category: "Bình An", brand: "Gocnha"
+      },
+      {
+        id: "5",
+        name: "Hợp Chưởng Quan Âm",
+        original: 10950000,
+        sale: 9600000,
+        image: "./img/monkeyking.jpg",
+        rating: 5, reviews: 2, category: "Tinh Hoa", brand: "The YÊN"
+      },
+      {
+        id: "6",
+        name: "Kim Long Phú Quý",
+        original: 29800000,
+        sale: 25500000,
+        image: "./img/ox.jpg",
+        rating: 5, reviews: 5, category: "Tinh Hoa", brand: "The YÊN"
+      },
+      {
+        id: "7",
+        name: "Tỳ Hưu Chiêu Tài",
+        original: 7500000,
+        sale: 6800000,
+        image: "./img/pixiu.jpg",
+        rating: 4, reviews: 4, category: "Bình An", brand: "Gocnha"
+      },
+      {
+        id: "8",
+        name: "Đại Thánh Mỹ Hầu Vương",
+        original: 7035000,
+        sale: 6080000,
+        image: "./img/quanam.jpg",
+        rating: 5, reviews: 2, category: "Tinh Hoa", brand: "Khác"
+      }
+    ];
+
+    let cart = [];
+    let currentBrand = '';
+    let currentSort = 'featured';
+
+    function formatPrice(p) {
+      return new Intl.NumberFormat('vi-VN').format(p) + '₫';
+    }
+
+    function getDiscount(orig, sale) {
+      return Math.round(((orig - sale) / orig) * 100);
+    }
+
+    function starsHTML(rating) {
+      let html = '';
+      for (let i = 0; i < 5; i++) {
+        html += `<svg class="star-icon ${i < rating ? 'filled' : 'empty'}" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+      }
+      return html;
+    }
+
+    function renderProducts() {
+      let filtered = [...products];
+      if (currentBrand) filtered = filtered.filter(p => p.brand === currentBrand);
+
+      switch (currentSort) {
+        case 'price-asc': filtered.sort((a, b) => a.sale - b.sale); break;
+        case 'price-desc': filtered.sort((a, b) => b.sale - a.sale); break;
+        case 'name-asc': filtered.sort((a, b) => a.name.localeCompare(b.name, 'vi')); break;
+      }
+
+      document.getElementById('productCount').textContent = filtered.length + ' sản phẩm';
+
+      const grid = document.getElementById('productGrid');
+      grid.innerHTML = filtered.map(p => {
+        const disc = getDiscount(p.original, p.sale);
+        return `
+          <article class="product-card">
+            <div class="card-image">
+              <a href="./product.html?id=${p.id}">
+                <img src="${p.image}" alt="${p.name}" loading="lazy" width="400" height="533" />
+              </a>
+              <div class="card-image-overlay"></div>
+              ${disc > 0 ? `<span class="badge-sale">-${disc}%</span>` : ''}
+              <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('${p.id}')">
+                <svg class="icon-sm" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                Thêm vào giỏ
+              </button>
+            </div>
+            <div class="card-info">
+              <div class="stars">
+                ${starsHTML(p.rating)}
+                ${p.reviews > 0 ? `<span class="reviews-count">(${p.reviews})</span>` : ''}
+              </div>
+              <p class="card-brand">${p.brand}</p>
+              <h3 class="card-name"><a href="product.html?id=${p.id}">${p.name}</a></h3>
+              <div class="card-prices">
+                <span class="price-sale">${formatPrice(p.sale)}</span>
+                <span class="price-original">${formatPrice(p.original)}</span>
+              </div>
+            </div>
+          </article>`;
+      }).join('');
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;padding:4rem;color:var(--fg-muted)">Không tìm thấy sản phẩm nào.</p>';
+      }
+    }
+
+    function filterBrand(brand) {
+      currentBrand = brand;
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      event.target.classList.add('active');
+      renderProducts();
+    }
+
+    function sortProducts(val) {
+      currentSort = val;
+      renderProducts();
+    }
+
+    // ===== CART =====
+    function addToCart(id) {
+      const product = products.find(p => p.id === id);
+      const existing = cart.find(c => c.id === id);
+      if (existing) { existing.qty++; }
+      else { cart.push({ ...product, qty: 1 }); }
+      updateCart();
+      toggleCart();
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(c => c.id !== id);
+      updateCart();
+    }
+
+    function changeQty(id, delta) {
+      const item = cart.find(c => c.id === id);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) { removeFromCart(id); return; }
+      updateCart();
+    }
+
+    function updateCart() {
+      const totalItems = cart.reduce((s, c) => s + c.qty, 0);
+      const totalPrice = cart.reduce((s, c) => s + c.sale * c.qty, 0);
+      document.getElementById('cartCount').textContent = totalItems;
+      document.getElementById('cartTotal').textContent = formatPrice(totalPrice);
+
+      const container = document.getElementById('cartItems');
+      if (cart.length === 0) {
+        container.innerHTML = '<p class="cart-empty">Giỏ hàng trống</p>';
+        return;
+      }
+      container.innerHTML = cart.map(c => `
+        <div class="cart-item">
+          <img src="${c.image}" alt="${c.name}" />
+          <div class="cart-item-info">
+            <p class="cart-item-name">${c.name}</p>
+            <p class="cart-item-price">${formatPrice(c.sale)}</p>
+            <div class="cart-item-qty">
+              <button onclick="changeQty('${c.id}',-1)">−</button>
+              <span>${c.qty}</span>
+              <button onclick="changeQty('${c.id}',1)">+</button>
+            </div>
+            <button class="cart-remove" onclick="removeFromCart('${c.id}')">Xóa</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleCart() {
+      document.getElementById('cartOverlay').classList.toggle('open');
+      document.getElementById('cartSidebar').classList.toggle('open');
+    }
+
+    // Init
+    renderProducts();
+  </script>
+
+</body>
+
+</html>

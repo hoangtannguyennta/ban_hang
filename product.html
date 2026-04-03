@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chi tiết sản phẩm — Nhà Bi - Góc nhỏ an yên</title>
+  <meta name="description" content="Xem chi tiết sản phẩm phong thủy nghệ thuật tại Nhà Bi - Góc nhỏ an yên." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="top-bar">Miễn phí vận chuyển cho đơn hàng từ 500.000₫</div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="./index.html" class="logo"><span class="text-gold-gradient">Nhà Bi - Góc nhỏ an yên</span></a>
+      <nav class="nav-links">
+        <a href="./index.html">Bộ sưu tập</a>
+        <a href="#">Bình An</a>
+        <a href="#">Tinh Hoa</a>
+        <a href="#">Về chúng tôi</a>
+      </nav>
+      <div class="header-actions">
+        <button class="cart-btn" onclick="toggleCart()">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span class="cart-badge" id="cartCount">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Product Detail -->
+  <section class="product-detail container" id="detailSection">
+    <!-- Content injected by JS -->
+  </section>
+
+  <!-- Related Products -->
+  <section class="related-section container">
+    <h2><span class="text-gold-gradient">Sản phẩm liên quan</span></h2>
+    <div class="product-grid" id="relatedGrid" style="padding-bottom:2rem"></div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-logo"><span class="text-gold-gradient">Nhà Bi - Góc nhỏ an yên </span></div>
+      <p class="footer-tagline">Trang trí phong thủy — Mang bình an đến mọi nhà</p>
+      <div class="footer-links">
+        <a href="#">Giới thiệu</a>
+        <a href="#">Liên hệ</a>
+        <a href="#">Chính sách</a>
+        <a href="#">Hỗ trợ</a>
+      </div>
+      <p class="footer-copy">© 2026 Nhà Bi - Góc nhỏ an yên. Tất cả quyền được bảo lưu.</p>
+    </div>
+  </footer>
+
+  <!-- Cart Overlay -->
+  <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+  <aside class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+      <h3>Giỏ hàng</h3>
+      <button class="cart-close" onclick="toggleCart()">
+        <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <p class="cart-empty">Giỏ hàng trống</p>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Tổng cộng</span>
+        <span class="total-price" id="cartTotal">0₫</span>
+      </div>
+      <button class="btn-checkout">Thanh toán</button>
+    </div>
+  </aside>
+
+  <script>
+    const products = [
+      { id:"1", name:"Trường Phong Mã", original:625000, sale:508000, image:"./img/buddha.jpg", rating:4, reviews:0, category:"Bình An", brand:"Gocnha", desc:"Tượng ngựa phong thủy Trường Phong Mã tượng trưng cho sự thành công và mã đáo thành công. Chất liệu đá cao cấp, chế tác thủ công tinh xảo, phù hợp đặt bàn làm việc hoặc phòng khách." },
+      { id:"2", name:"Ngưu Chấn Đỉnh", original:635000, sale:518000, image:"./img/dragon.jpg", rating:5, reviews:3, category:"Bình An", brand:"Gocnha", desc:"Tượng trâu Ngưu Chấn Đỉnh biểu tượng sức mạnh và sự kiên trì. Được chế tác từ đá tự nhiên, mỗi sản phẩm là một tác phẩm nghệ thuật độc đáo." },
+      { id:"3", name:"Song Lân Cung Chúc", original:15099000, sale:13579000, image:"./img/horse.jpg", rating:5, reviews:7, category:"Bình An", brand:"The YÊN", desc:"Đôi lân Song Lân Cung Chúc mang ý nghĩa cát tường và may mắn. Sản phẩm cao cấp từ thương hiệu The YÊN, hoàn hảo cho không gian phòng khách sang trọng." },
+      { id:"4", name:"Sư Thầy An Nhiên", original:10000000, sale:8600000, image:"./img/lion.jpg", rating:4, reviews:1, category:"Bình An", brand:"Gocnha", desc:"Tượng Sư Thầy An Nhiên toát lên vẻ thanh tịnh, bình yên. Đặt trong phòng thiền hoặc phòng khách giúp không gian thêm tĩnh lặng và an lạc." },
+      { id:"5", name:"Hợp Chưởng Quan Âm", original:10950000, sale:9600000, image:"./img/monkeyking.jpg", rating:5, reviews:2, category:"Tinh Hoa", brand:"The YÊN", desc:"Tượng Quan Âm Hợp Chưởng với đường nét tinh xảo, thể hiện lòng từ bi và sự bình an. Sản phẩm thuộc dòng Tinh Hoa cao cấp." },
+      { id:"6", name:"Kim Long Phú Quý", original:29800000, sale:25500000, image:"./img/ox.jpg", rating:5, reviews:5, category:"Tinh Hoa", brand:"The YÊN", desc:"Rồng vàng Kim Long Phú Quý — biểu tượng quyền uy và thịnh vượng. Tác phẩm nghệ thuật đỉnh cao, chế tác thủ công từ chất liệu cao cấp nhất." },
+      { id:"7", name:"Tỳ Hưu Chiêu Tài", original:7500000, sale:6800000, image:"./img/pixiu.jpg", rating:4, reviews:4, category:"Bình An", brand:"Gocnha", desc:"Tỳ Hưu Chiêu Tài — linh vật phong thủy chiêu tài, hút lộc, giữ của. Được chế tác tỉ mỉ, phù hợp đặt tại bàn làm việc hoặc quầy thu ngân." },
+      { id:"8", name:"Đại Thánh Mỹ Hầu Vương", original:7035000, sale:6080000, image:"./img/quanam.jpg", rating:5, reviews:2, category:"Tinh Hoa", brand:"Khác", desc:"Tượng Đại Thánh Mỹ Hầu Vương — Tôn Ngộ Không — tượng trưng cho sức mạnh phi thường và lòng trung thành. Tác phẩm độc đáo dành cho người yêu thích văn hóa phương Đông." },
+    ];
+
+    let cart = [];
+
+    function formatPrice(p) {
+      return new Intl.NumberFormat('vi-VN').format(p) + '₫';
+    }
+
+    function getDiscount(orig, sale) {
+      return Math.round(((orig - sale) / orig) * 100);
+    }
+
+    function starsHTML(rating, size) {
+      let html = '';
+      const cls = size === 'lg' ? 'star-icon' : 'star-icon';
+      for (let i = 0; i < 5; i++) {
+        html += `<svg class="${cls} ${i < rating ? 'filled' : 'empty'}" viewBox="0 0 24 24" ${size === 'lg' ? 'style="width:16px;height:16px"' : ''}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+      }
+      return html;
+    }
+
+    // Get product from URL
+    const params = new URLSearchParams(window.location.search);
+    const productId = params.get('id') || '1';
+    const product = products.find(p => p.id === productId) || products[0];
+    const discount = getDiscount(product.original, product.sale);
+
+    // Update page title
+    document.title = product.name + ' —Nhà Bi - Góc nhỏ an yên';
+
+    // Render detail
+    document.getElementById('detailSection').innerHTML = `
+      <nav class="breadcrumb">
+        <a href="./index.html">Trang chủ</a>
+        <span class="sep">›</span>
+        <a href="./index.html">${product.category}</a>
+        <span class="sep">›</span>
+        <span>${product.name}</span>
+      </nav>
+
+      <div class="detail-grid">
+        <div class="detail-gallery">
+          ${discount > 0 ? `<span class="badge-sale detail-badge">-${discount}%</span>` : ''}
+          <img src="${product.image}" alt="${product.name}" id="mainImage" />
+          <div class="gallery-thumbnails">
+            <img src="${product.image}" alt="Ảnh 1" class="active" onclick="changeImage(this)" />
+            <img src="${product.image}" alt="Ảnh 2" onclick="changeImage(this)" />
+            <img src="${product.image}" alt="Ảnh 3" onclick="changeImage(this)" />
+          </div>
+        </div>
+
+        <div class="detail-info">
+          <p class="detail-brand">${product.brand}</p>
+          <h1 class="detail-name">${product.name}</h1>
+
+          <div class="detail-stars">
+            ${starsHTML(product.rating, 'lg')}
+            <span class="reviews-count">(${product.reviews} đánh giá)</span>
+          </div>
+
+          <div class="detail-prices">
+            <span class="price-sale">${formatPrice(product.sale)}</span>
+            <span class="price-original">${formatPrice(product.original)}</span>
+          </div>
+          ${discount > 0 ? `<p class="detail-discount">Tiết kiệm ${formatPrice(product.original - product.sale)} (${discount}%)</p>` : ''}
+
+          <p class="detail-desc">${product.desc}</p>
+
+          <div class="quantity-selector">
+            <label>Số lượng</label>
+            <button class="qty-btn" onclick="changeDetailQty(-1)">−</button>
+            <div class="qty-value" id="detailQty">1</div>
+            <button class="qty-btn" onclick="changeDetailQty(1)">+</button>
+          </div>
+
+          <div class="detail-actions">
+            <button class="btn-add-cart" onclick="addDetailToCart()">
+              <svg class="icon-sm" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+              Thêm vào giỏ
+            </button>
+            <button class="btn-buy-now">Mua ngay</button>
+          </div>
+
+          <div class="detail-meta">
+            <div><strong>Danh mục</strong><span>${product.category}</span></div>
+            <div><strong>Thương hiệu</strong><span>${product.brand}</span></div>
+            <div><strong>Tình trạng</strong><span style="color:var(--gold)">Còn hàng</span></div>
+            <div><strong>Vận chuyển</strong><span>Miễn phí toàn quốc</span></div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Render related products
+    const related = products.filter(p => p.id !== productId).slice(0, 4);
+    document.getElementById('relatedGrid').innerHTML = related.map(p => {
+      const d = getDiscount(p.original, p.sale);
+      return `
+        <article class="product-card">
+          <div class="card-image">
+            <a href="product.html?id=${p.id}">
+              <img src="${p.image}" alt="${p.name}" loading="lazy" width="400" height="533" />
+            </a>
+            <div class="card-image-overlay"></div>
+            ${d > 0 ? `<span class="badge-sale">-${d}%</span>` : ''}
+            <button class="add-to-cart-btn" onclick="addToCart('${p.id}')">
+              <svg class="icon-sm" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+              Thêm vào giỏ
+            </button>
+          </div>
+          <div class="card-info">
+            <div class="stars">
+              ${starsHTML(p.rating)}
+              ${p.reviews > 0 ? `<span class="reviews-count">(${p.reviews})</span>` : ''}
+            </div>
+            <p class="card-brand">${p.brand}</p>
+            <h3 class="card-name"><a href="product.html?id=${p.id}">${p.name}</a></h3>
+            <div class="card-prices">
+              <span class="price-sale">${formatPrice(p.sale)}</span>
+              <span class="price-original">${formatPrice(p.original)}</span>
+            </div>
+          </div>
+        </article>`;
+    }).join('');
+
+    // Detail quantity
+    let detailQty = 1;
+    function changeDetailQty(delta) {
+      detailQty = Math.max(1, detailQty + delta);
+      document.getElementById('detailQty').textContent = detailQty;
+    }
+
+    function addDetailToCart() {
+      const existing = cart.find(c => c.id === product.id);
+      if (existing) { existing.qty += detailQty; }
+      else { cart.push({ ...product, qty: detailQty }); }
+      updateCart();
+      toggleCart();
+    }
+
+    // ===== CART =====
+    function addToCart(id) {
+      const p = products.find(x => x.id === id);
+      const existing = cart.find(c => c.id === id);
+      if (existing) { existing.qty++; }
+      else { cart.push({ ...p, qty: 1 }); }
+      updateCart();
+      toggleCart()
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(c => c.id !== id);
+      updateCart();
+    }
+
+    function changeQty(id, delta) {
+      const item = cart.find(c => c.id === id);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) { removeFromCart(id); return; }
+      updateCart();
+    }
+
+    function updateCart() {
+      const totalItems = cart.reduce((s,c) => s + c.qty, 0);
+      const totalPrice = cart.reduce((s,c) => s + c.sale * c.qty, 0);
+      document.getElementById('cartCount').textContent = totalItems;
+      document.getElementById('cartTotal').textContent = formatPrice(totalPrice);
+
+      const container = document.getElementById('cartItems');
+      if (cart.length === 0) {
+        container.innerHTML = '<p class="cart-empty">Giỏ hàng trống</p>';
+        return;
+      }
+      container.innerHTML = cart.map(c => `
+        <div class="cart-item">
+          <img src="${c.image}" alt="${c.name}" />
+          <div class="cart-item-info">
+            <p class="cart-item-name">${c.name}</p>
+            <p class="cart-item-price">${formatPrice(c.sale)}</p>
+            <div class="cart-item-qty">
+              <button onclick="changeQty('${c.id}',-1)">−</button>
+              <span>${c.qty}</span>
+              <button onclick="changeQty('${c.id}',1)">+</button>
+            </div>
+            <button class="cart-remove" onclick="removeFromCart('${c.id}')">Xóa</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleCart() {
+      document.getElementById('cartOverlay').classList.toggle('open');
+      document.getElementById('cartSidebar').classList.toggle('open');
+    }
+
+    function changeImage(el) {
+      document.getElementById('mainImage').src = el.src;
+      document.querySelectorAll('.gallery-thumbnails img').forEach(i => i.classList.remove('active'));
+      el.classList.add('active');
+    }
+  </script>
+
+</body>
+</html>
