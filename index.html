@@ -8,6 +8,9 @@
   <meta name="description"
     content="Bộ sưu tập nghệ thuật phong thủy tinh xảo, mang bình an và thịnh vượng đến không gian sống." />
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+
 </head>
 
 <body>
@@ -18,7 +21,10 @@
   <!-- Header -->
   <header class="site-header">
     <div class="container header-inner">
-      <a href="store.html" class="logo"><span class="text-gold-gradient">Nhà Bi - Góc nhỏ an yên </span></a>
+      <a href="store.html" class="logo">
+        <img src="./img/logo nhà bi-04.png" alt="Nhà Bi Logo" />
+        <span class="text-gold-gradient">Nhà Bi </span>
+      </a>
       <nav class="nav-links">
         <a href="#">Bộ sưu tập</a>
         <a href="#">Bình An</a>
@@ -38,12 +44,22 @@
     </div>
   </header>
 
-  <!-- Hero -->
-  <section class="hero">
-    <p class="hero-label">Bộ sưu tập</p>
-    <h1><span class="text-gold-gradient">Bình An</span></h1>
-    <p class="hero-desc">Những tác phẩm nghệ thuật phong thủy tinh xảo, mang năng lượng bình an và thịnh vượng đến không
-      gian sống của bạn.</p>
+
+  <!-- Hero Slider -->
+  <section class="hero-slider">
+    <div class="hero-slider__wrapper">
+      <div class="hero-slider__copy">
+        <p class="hero-label">Bộ sưu tập</p>
+        <h1><span class="text-gold-gradient">Bình An</span></h1>
+        <p class="hero-desc">Những tác phẩm nghệ thuật phong thủy tinh xảo, mang năng lượng bình an và thịnh vượng đến không gian sống của bạn.</p>
+      </div>
+      <div class="hero-slider__slides banner-slider">
+        <div><img src="./img/buddha.jpg" alt="Trường Phong Mã"></div>
+        <div><img src="./img/dragon.jpg" alt="Ngưu Chấn Đỉnh"></div>
+        <div><img src="./img/horse.jpg" alt="Song Lân Cung Chúc"></div>
+        <div><img src="./img/lion.jpg" alt="Sư Thầy An Nhiên"></div>
+      </div>
+    </div>
   </section>
 
   <!-- Main -->
@@ -108,6 +124,8 @@
     </div>
   </aside>
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
   <script>
     // ===== DATA =====
     const products = [
@@ -315,6 +333,17 @@
 
     // Init
     renderProducts();
+
+    // Initialize Slick Slider
+    $(document).ready(function(){
+      $('.banner-slider').slick({
+        autoplay: true,
+        autoplaySpeed: 3000,
+        dots: true,
+        arrows: true,
+        infinite: true
+      });
+    });
   </script>
 
 </body>
