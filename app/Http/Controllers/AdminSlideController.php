@@ -14,32 +14,48 @@ class AdminSlideController extends Controller
      */
     private function compressImageToBase64($file, $maxWidth = 1200, $quality = 80)
     {
-        $imageInfo = getimagesize($file->getRealPath());
+        if (!extension_loaded('gd')) {
+            return 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+        }
+
+        $imageInfo = @getimagesize($file->getRealPath());
+        if (!$imageInfo) {
+            return 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+        }
+
         $mime = $imageInfo['mime'];
         $width = $imageInfo[0];
         $height = $imageInfo[1];
 
-        switch ($mime) {
-            case 'image/jpeg': case 'image/jpg': $image = imagecreatefromjpeg($file->getRealPath()); break;
-            case 'image/png':  $image = imagecreatefrompng($file->getRealPath()); break;
-            case 'image/webp': $image = imagecreatefromwebp($file->getRealPath()); break;
-            default: return 'data:' . $mime . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+        try {
+            switch ($mime) {
+                case 'image/jpeg': case 'image/jpg': $image = @imagecreatefromjpeg($file->getRealPath()); break;
+                case 'image/png':  $image = @imagecreatefrompng($file->getRealPath()); break;
+                case 'image/webp': $image = @imagecreatefromwebp($file->getRealPath()); break;
+                default: $image = false;
+            }
+
+            if (!$image) {
+                return 'data:' . $mime . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            }
+
+            if ($width > $maxWidth) {
+                $newWidth = $maxWidth;
+                $newHeight = floor($height * ($maxWidth / $width));
+                $tmp = imagecreatetruecolor($newWidth, $newHeight);
+                imagecopyresampled($tmp, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+                $image = $tmp;
+            }
+
+            ob_start();
+            imagejpeg($image, null, $quality);
+            $binaryData = ob_get_clean();
+            imagedestroy($image);
+
+            return 'data:image/jpeg;base64,' . base64_encode($binaryData);
+        } catch (\Throwable $e) {
+            return 'data:' . $mime . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
         }
-
-        if ($width > $maxWidth) {
-            $newWidth = $maxWidth;
-            $newHeight = floor($height * ($maxWidth / $width));
-            $tmp = imagecreatetruecolor($newWidth, $newHeight);
-            imagecopyresampled($tmp, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-            $image = $tmp;
-        }
-
-        ob_start();
-        imagejpeg($image, null, $quality);
-        $binaryData = ob_get_clean();
-        imagedestroy($image);
-
-        return 'data:image/jpeg;base64,' . base64_encode($binaryData);
     }
 
     public function index()
