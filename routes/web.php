@@ -9,26 +9,36 @@ use App\Http\Controllers\OrderManagementController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File; // Thêm dòng này ở đầu file web.php
 
 Route::get('/init-db', function () {
     try {
-        // 1. Khởi tạo lại Database (Xóa sạch và tạo mới)
+        // Bước A: Xóa thư mục/link storage cũ trong public (NẾU CÓ)
+        // Việc này giúp lệnh storage:link ở dưới không bị báo lỗi "already exists"
+        $publicStoragePath = public_path('storage');
+        if (File::exists($publicStoragePath)) {
+            // Nếu là link ảo (symlink) thì xóa link, nếu là thư mục thì xóa thư mục
+            is_link($publicStoragePath) ? unlink($publicStoragePath) : File::deleteDirectory($publicStoragePath);
+        }
+
+        // 1. Khởi tạo lại Database
         Artisan::call('migrate:fresh', [
             '--force' => true,
             '--seed' => true
         ]);
 
-        // 2. Tạo link kết nối thư mục storage với public
+        // 2. Tạo link kết nối MỚI
         Artisan::call('storage:link');
 
-        // 3. (Tùy chọn) Xóa cache cấu hình để nhận thông số mới nhất
+        // 3. Xóa cache
         Artisan::call('config:clear');
 
-        return "Chúc mừng! Database đã migrate, seed và tạo Storage Link thành công!";
+        return "Khởi tạo thành công! Link Storage đã được làm mới.";
     } catch (\Exception $e) {
         return "Có lỗi xảy ra: " . $e->getMessage();
     }
 });
+
 /**
  * Frontend Routes
  */
