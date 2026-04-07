@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css"
         href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
+    @stack('styles')
 </head>
 
 <body>
@@ -79,7 +80,7 @@
                 <span>Tổng cộng</span>
                 <span class="total-price" id="cartTotal">0₫</span>
             </div>
-            <button class="btn-checkout">Thanh toán</button>
+            <a href="{{ route('fe.checkout') }}" class="btn-checkout">Thanh toán</a>
         </div>
     </aside>
 

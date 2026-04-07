@@ -3,6 +3,7 @@
 @section('page_title', 'Chi tiết Đơn hàng #' . $order->id)
 
 @section('content')
+
 <div class="row">
     <div class="col-md-8">
         <!-- Danh sách sản phẩm -->
@@ -26,8 +27,8 @@
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        @if($item->product->image)
-                                            <img src="{{ asset('storage/' . $item->product->image) }}" alt="{{ $item->product->name }}" class="rounded me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                        @if($item->product->images)
+                                            <img src="{{ $item->product->images }}" alt="{{ $item->product->name }}" class="rounded me-3" style="width: 50px; height: 50px; object-fit: cover;">
                                         @else
                                             <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
                                                 <i class="fa-solid fa-image text-muted"></i>
@@ -90,7 +91,7 @@
             <div class="card-body">
                 <div class="mb-3">
                     <label class="small text-muted d-block">Họ tên</label>
-                    <span class="fw-bold">{{ $order->user->name }}</span>
+                    <span class="fw-bold">{{ $order->name }}</span>
                 </div>
                 <div class="mb-3">
                     <label class="small text-muted d-block">Số điện thoại</label>

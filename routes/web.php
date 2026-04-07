@@ -10,9 +10,7 @@ use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File; // Thêm dòng này ở đầu file web.php
-
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Response;
+use App\Http\Controllers\CheckoutController;
 
 Route::get('/init-db', function () {
     try {
@@ -27,7 +25,6 @@ Route::get('/init-db', function () {
         // 1. Khởi tạo lại Database
         Artisan::call('migrate:fresh', [
             '--force' => true,
-            '--seed' => true
         ]);
 
         // 2. Tạo link kết nối MỚI
@@ -48,6 +45,11 @@ Route::get('/init-db', function () {
 Route::get('/', [ProductController::class, 'index'])->name('fe.home');
 Route::get('/san-pham/{slug}', [ProductController::class, 'show'])->name('fe.product.detail');
 
+// Checkout Routes
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('fe.checkout');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('fe.checkout.store');
+Route::get('/thank-you/{order}', [CheckoutController::class, 'success'])->name('fe.checkout.success');
+
 /**
  * Admin Routes
  * Các route này được bảo vệ bởi middleware 'auth' (đã đăng nhập) 
@@ -64,7 +66,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('products', ProductManagementController::class);
 
     // Quản lý Đơn hàng
-    Route::resource('orders', OrderManagementController::class)->only(['index', 'show', 'update', 'destroy']);
+    Route::resource('orders', OrderManagementController::class);
 
     // Quản lý Đánh giá
     Route::resource('reviews', AdminReviewController::class);
