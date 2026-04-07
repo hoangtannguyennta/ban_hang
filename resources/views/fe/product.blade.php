@@ -15,9 +15,9 @@
 
         <div class="detail-grid">
             <div class="detail-gallery">
-                <img src="{{ asset($product->image ?? 'img/default.jpg') }}" alt="{{ $product->name }}" id="mainImage" />
+                <img src="{{ $product->images ?? 'img/default.jpg' }}" alt="{{ $product->name }}" id="mainImage" />
                 <div class="gallery-thumbnails">
-                    <img src="{{ asset($product->image ?? 'img/default.jpg') }}" alt="{{ $product->name }}" class="active" onclick="changeImage(this)" />
+                    <img src="{{ $product->images ?? 'img/default.jpg' }}" alt="{{ $product->name }}" class="active" onclick="changeImage(this)" />
                     {{-- Bạn có thể thêm vòng lặp ở đây nếu sản phẩm có nhiều ảnh --}}
                 </div>
             </div>
@@ -80,7 +80,7 @@
                 <article class="product-card">
                     <div class="card-image">
                         <a href="{{ route('fe.product.detail', $item->slug) }}">
-                            <img src="{{ asset($item->image ?? 'img/default.jpg') }}" alt="{{ $item->name }}" loading="lazy" />
+                            <img src="{{ $item->images ?? 'img/default.jpg' }}" alt="{{ $item->name }}" loading="lazy" />
                         </a>
                         <div class="card-image-overlay"></div>
                         <button class="add-to-cart-btn btn-add-to-cart" 

@@ -43,7 +43,7 @@ class ProductSeeder extends Seeder
                 'description' => $faker->paragraph(2),
                 'price' => $item['price'],
                 'stock' => $item['stock'],
-                'image' => $fashionImages[$key] ?? $faker->imageUrl(640, 480, 'fashion'),
+                'images' => $fashionImages[$key] ?? $faker->imageUrl(640, 480, 'fashion'),
             ]);
         }
     }

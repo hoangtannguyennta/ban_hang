@@ -52,18 +52,18 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="image" class="form-label fw-semibold">Hình ảnh sản phẩm</label>
+                            <label for="images" class="form-label fw-semibold">Hình ảnh sản phẩm</label>
                             <div class="mb-3">
-                                @if ($product->image)
+                                @if ($product->images)
                                     <div class="position-relative d-inline-block">
-                                        <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="img-thumbnail" width="150">
+                                        <img src="{{ asset($product->images) }}" alt="{{ $product->name }}" class="img-thumbnail" width="150">
                                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info text-dark">Hiện tại</span>
                                     </div>
                                 @endif
                             </div>
-                            <input type="file" class="form-control @error('image') is-invalid @enderror" name="image" id="image">
+                            <input type="file" class="form-control @error('images') is-invalid @enderror" name="images" id="images">
                             <div class="form-text text-muted">Chọn file mới nếu bạn muốn thay đổi hình ảnh.</div>
-                            @error('image')
+                            @error('images')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>

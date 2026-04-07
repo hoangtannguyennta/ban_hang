@@ -9,6 +9,39 @@ use Illuminate\Support\Facades\File;
 
 class AdminSlideController extends Controller
 {
+    /**
+     * Nén và chuyển đổi ảnh sang Base64
+     */
+    private function compressImageToBase64($file, $maxWidth = 1200, $quality = 80)
+    {
+        $imageInfo = getimagesize($file->getRealPath());
+        $mime = $imageInfo['mime'];
+        $width = $imageInfo[0];
+        $height = $imageInfo[1];
+
+        switch ($mime) {
+            case 'image/jpeg': case 'image/jpg': $image = imagecreatefromjpeg($file->getRealPath()); break;
+            case 'image/png':  $image = imagecreatefrompng($file->getRealPath()); break;
+            case 'image/webp': $image = imagecreatefromwebp($file->getRealPath()); break;
+            default: return 'data:' . $mime . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+        }
+
+        if ($width > $maxWidth) {
+            $newWidth = $maxWidth;
+            $newHeight = floor($height * ($maxWidth / $width));
+            $tmp = imagecreatetruecolor($newWidth, $newHeight);
+            imagecopyresampled($tmp, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+            $image = $tmp;
+        }
+
+        ob_start();
+        imagejpeg($image, null, $quality);
+        $binaryData = ob_get_clean();
+        imagedestroy($image);
+
+        return 'data:image/jpeg;base64,' . base64_encode($binaryData);
+    }
+
     public function index()
     {
         $slides = Slide::orderBy('order')->paginate(10);
@@ -31,15 +64,8 @@ class AdminSlideController extends Controller
 
         if ($request->hasFile('images')) {
             try {
-                $uploadPath = public_path('uploads/slides');
-                File::ensureDirectoryExists($uploadPath, 0755, true);
-                @chmod($uploadPath, 0777); // Cấp quyền ghi cho Render
-
                 foreach ($request->file('images') as $file) {
-                    $fileName = time() . '_' . preg_replace('/[^A-Za-z0-9\-._]/', '', $file->getClientOriginalName());
-                    $file->move($uploadPath, $fileName);
-                    $path = 'uploads/slides/' . $fileName;
-                    
+                    $base64Image = $this->compressImageToBase64($file);
                     Slide::create([
                         'title' => $request->title,
                         'subtitle' => $request->subtitle,
@@ -47,7 +73,7 @@ class AdminSlideController extends Controller
                         'link' => $request->link,
                         'order' => $request->order ?? 0,
                         'is_active' => $request->boolean('is_active', true),
-                        'images' => $path,
+                        'images' => $base64Image,
                     ]);
                 }
             } catch (\Exception $e) {
@@ -74,18 +100,8 @@ class AdminSlideController extends Controller
 
         if ($request->hasFile('images')) {
             try {
-                if ($slide->images && file_exists(public_path($slide->images))) {
-                    @unlink(public_path($slide->images));
-                }
-
-                $uploadPath = public_path('uploads/slides');
-                File::ensureDirectoryExists($uploadPath, 0755, true);
-                @chmod($uploadPath, 0777); // Đảm bảo quyền ghi khi update
-
                 foreach ($request->file('images') as $file) {
-                    $fileName = time() . '_' . preg_replace('/[^A-Za-z0-9\-._]/', '', $file->getClientOriginalName());
-                    $file->move($uploadPath, $fileName);
-                    $validated['images'] = 'uploads/slides/' . $fileName;
+                    $validated['images'] = $this->compressImageToBase64($file);
                 }
             } catch (\Exception $e) {
                 return back()->withErrors(['images' => 'Lỗi cập nhật slide: ' . $e->getMessage()])->withInput();
@@ -104,9 +120,6 @@ class AdminSlideController extends Controller
 
     public function destroy(Slide $slide)
     {
-        if ($slide->images && file_exists(public_path($slide->images))) {
-            unlink(public_path($slide->images));
-        }
         $slide->delete();
         return redirect()->back()->with('success', 'Xóa slide thành công!');
     }

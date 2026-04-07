@@ -28,8 +28,8 @@
                             <tr>
                                 <td>{{ $product->id }}</td>
                                 <td>
-                                    @if ($product->image)
-                                        <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="rounded shadow-sm" width="60" height="60" style="object-fit: cover;">
+                                    @if ($product->images)
+                                        <img src="{{ $product->images }}" alt="{{ $product->name }}" class="rounded shadow-sm" width="60" height="60" style="object-fit: cover;">
                                     @else
                                         <div class="bg-light d-flex align-items-center justify-content-center rounded" style="width: 60px; height: 60px;">
                                             <i class="fa-solid fa-image text-muted"></i>

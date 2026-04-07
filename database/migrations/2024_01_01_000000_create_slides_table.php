@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('subtitle')->nullable(); // Ví dụ: NEW COLLECTION 2024
             $table->string('title');               // Ví dụ: Sải bước tự tin
             $table->text('desc')->nullable();      // Đoạn mô tả ngắn
-            $table->text('images');                // Đường dẫn ảnh
+            $table->longText('images')->nullable(); // Chuyển sang lưu Base64
             $table->string('link')->nullable();    // Link khi click nút
             $table->integer('order')->default(0);  // Thứ tự hiển thị
             $table->boolean('is_active')->default(true);

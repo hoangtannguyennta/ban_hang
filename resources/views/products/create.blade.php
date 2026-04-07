@@ -51,10 +51,10 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="image" class="form-label fw-semibold">Hình ảnh minh họa</label>
-                            <input type="file" class="form-control @error('image') is-invalid @enderror" name="image" id="image">
+                            <label for="images" class="form-label fw-semibold">Hình ảnh minh họa</label>
+                            <input type="file" class="form-control @error('images') is-invalid @enderror" name="images" id="images">
                             <div class="form-text">Định dạng hỗ trợ: JPG, PNG, WEBP.</div>
-                            @error('image')
+                            @error('images')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
