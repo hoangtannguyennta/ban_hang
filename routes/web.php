@@ -8,6 +8,12 @@ use App\Http\Controllers\AdminSlideController;
 use App\Http\Controllers\OrderManagementController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
+
+Route::get('/init-db', function () {
+    Artisan::call('migrate:fresh --seed --force');
+    return "Database đã được khởi tạo và migrate thành công!";
+});
 
 /**
  * Frontend Routes
