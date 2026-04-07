@@ -53,7 +53,7 @@
                         
                         <div class="mt-3">
                             <p class="mb-2 text-muted small">Ảnh hiện tại:</p>
-                            <img src="{{ asset($slide->images) }}" alt="{{ $slide->title }}" class="img-thumbnail" style="max-height: 200px;">
+                            <img src="{{ $slide->images }}" alt="{{ $slide->title }}" class="img-thumbnail" style="max-height: 200px;">
                         </div>
 
                         @error('images')
