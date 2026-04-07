@@ -30,27 +30,27 @@ class AdminSlideController extends Controller
         ]);
 
         if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $file) {
-                $fileName = time() . '_' . $file->getClientOriginalName();
-
+            try {
                 $uploadPath = public_path('uploads/slides');
-                if (!File::exists($uploadPath)) {
-                    File::makeDirectory($uploadPath, 0755, true);
-                }
+                File::ensureDirectoryExists($uploadPath, 0755, true);
 
-                // Di chuyển ảnh vào public/uploads/slides
-                $file->move($uploadPath, $fileName);
-                $path = 'uploads/slides/' . $fileName;
-                
-                Slide::create([
-                    'title' => $request->title,
-                    'subtitle' => $request->subtitle,
-                    'desc' => $request->desc,
-                    'link' => $request->link,
-                    'order' => $request->order ?? 0,
-                    'is_active' => $request->boolean('is_active', true),
-                    'images' => $path,
-                ]);
+                foreach ($request->file('images') as $file) {
+                    $fileName = time() . '_' . preg_replace('/[^A-Za-z0-9\-._]/', '', $file->getClientOriginalName());
+                    $file->move($uploadPath, $fileName);
+                    $path = 'uploads/slides/' . $fileName;
+                    
+                    Slide::create([
+                        'title' => $request->title,
+                        'subtitle' => $request->subtitle,
+                        'desc' => $request->desc,
+                        'link' => $request->link,
+                        'order' => $request->order ?? 0,
+                        'is_active' => $request->boolean('is_active', true),
+                        'images' => $path,
+                    ]);
+                }
+            } catch (\Exception $e) {
+                return back()->withErrors(['images' => 'Lỗi lưu slide: ' . $e->getMessage()])->withInput();
             }
         }
 
@@ -72,21 +72,21 @@ class AdminSlideController extends Controller
         ]);
 
         if ($request->hasFile('images')) {
-            // Xóa ảnh cũ
-            if ($slide->images && file_exists(public_path($slide->images))) {
-                unlink(public_path($slide->images));
-            }
-
-            foreach ($request->file('images') as $file) {
-                $fileName = time() . '_' . $file->getClientOriginalName();
-                
-                $uploadPath = public_path('uploads/slides');
-                if (!File::exists($uploadPath)) {
-                    File::makeDirectory($uploadPath, 0755, true);
+            try {
+                if ($slide->images && file_exists(public_path($slide->images))) {
+                    @unlink(public_path($slide->images));
                 }
-                $file->move($uploadPath, $fileName);
-                
-                $validated['images'] = 'uploads/slides/' . $fileName;
+
+                $uploadPath = public_path('uploads/slides');
+                File::ensureDirectoryExists($uploadPath, 0755, true);
+
+                foreach ($request->file('images') as $file) {
+                    $fileName = time() . '_' . preg_replace('/[^A-Za-z0-9\-._]/', '', $file->getClientOriginalName());
+                    $file->move($uploadPath, $fileName);
+                    $validated['images'] = 'uploads/slides/' . $fileName;
+                }
+            } catch (\Exception $e) {
+                return back()->withErrors(['images' => 'Lỗi cập nhật slide: ' . $e->getMessage()])->withInput();
             }
         }
 

@@ -35,17 +35,17 @@ class ProductManagementController extends Controller
         $validated['slug'] = Str::slug($request->name);
 
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-
-            $uploadPath = public_path('uploads/products');
-            if (!File::exists($uploadPath)) {
-                File::makeDirectory($uploadPath, 0755, true);
+            try {
+                $file = $request->file('image');
+                // Làm sạch tên file để tránh lỗi hệ thống Linux
+                $fileName = time() . '_' . preg_replace('/[^A-Za-z0-9\-._]/', '', $file->getClientOriginalName());
+                $uploadPath = public_path('uploads/products');
+                File::ensureDirectoryExists($uploadPath, 0755, true);
+                $file->move($uploadPath, $fileName);
+                $validated['image'] = 'uploads/products/' . $fileName;
+            } catch (\Exception $e) {
+                return back()->withErrors(['image' => 'Lỗi upload ảnh: ' . $e->getMessage()])->withInput();
             }
-
-            // Di chuyển ảnh vào public/uploads/products
-            $file->move($uploadPath, $fileName);
-            $validated['image'] = 'uploads/products/' . $fileName;
         }
 
         Product::create($validated);
@@ -71,21 +71,20 @@ class ProductManagementController extends Controller
         $validated['slug'] = Str::slug($request->name);
 
         if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($product->image && file_exists(public_path($product->image))) {
-                unlink(public_path($product->image));
+            try {
+                if ($product->image && file_exists(public_path($product->image))) {
+                    @unlink(public_path($product->image));
+                }
+                
+                $file = $request->file('image');
+                $fileName = time() . '_' . preg_replace('/[^A-Za-z0-9\-._]/', '', $file->getClientOriginalName());
+                $uploadPath = public_path('uploads/products');
+                File::ensureDirectoryExists($uploadPath, 0755, true);
+                $file->move($uploadPath, $fileName);
+                $validated['image'] = 'uploads/products/' . $fileName;
+            } catch (\Exception $e) {
+                return back()->withErrors(['image' => 'Lỗi cập nhật ảnh: ' . $e->getMessage()])->withInput();
             }
-            
-            $file = $request->file('image');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-
-            $uploadPath = public_path('uploads/products');
-            if (!File::exists($uploadPath)) {
-                File::makeDirectory($uploadPath, 0755, true);
-            }
-
-            $file->move($uploadPath, $fileName);
-            $validated['image'] = 'uploads/products/' . $fileName;
         }
 
         $product->update($validated);
