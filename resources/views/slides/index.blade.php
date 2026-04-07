@@ -32,7 +32,7 @@
                         <tr>
                             <td>{{ $slide->order }}</td>
                             <td>
-                                <img src="{{ asset('storage/' . $slide->images) }}" alt="{{ $slide->title }}"
+                                <img src="{{ asset($slide->images) }}" alt="{{ $slide->title }}"
                                     class="img-thumbnail" style="height: 80px; width: 120px; object-fit: cover">
                             </td>
                             <td>

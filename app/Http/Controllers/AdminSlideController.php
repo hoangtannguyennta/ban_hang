@@ -30,7 +30,12 @@ class AdminSlideController extends Controller
 
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
-                $path = $file->store('slides', 'public');
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                
+                // Di chuyển ảnh vào public/uploads/slides
+                $file->move(public_path('uploads/slides'), $fileName);
+                $path = 'uploads/slides/' . $fileName;
+                
                 Slide::create([
                     'title' => $request->title,
                     'subtitle' => $request->subtitle,
@@ -61,10 +66,16 @@ class AdminSlideController extends Controller
         ]);
 
         if ($request->hasFile('images')) {
-            Storage::disk('public')->delete($slide->images);      
+            // Xóa ảnh cũ
+            if ($slide->images && file_exists(public_path($slide->images))) {
+                unlink(public_path($slide->images));
+            }
+
             foreach ($request->file('images') as $file) {
-                $path = $file->store('slides', 'public');
-                $validated['images'] = $path;
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('uploads/slides'), $fileName);
+                
+                $validated['images'] = 'uploads/slides/' . $fileName;
             }
         }
 
@@ -80,8 +91,8 @@ class AdminSlideController extends Controller
 
     public function destroy(Slide $slide)
     {
-        if ($slide->image) {
-            Storage::disk('public')->delete($slide->image);
+        if ($slide->images && file_exists(public_path($slide->images))) {
+            unlink(public_path($slide->images));
         }
         $slide->delete();
         return redirect()->back()->with('success', 'Xóa slide thành công!');

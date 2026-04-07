@@ -15,9 +15,9 @@
 
         <div class="detail-grid">
             <div class="detail-gallery">
-                <img src="{{ asset('storage/' . ($product->image ?? 'img/default.jpg')) }}" alt="{{ $product->name }}" id="mainImage" />
+                <img src="{{ asset($product->image ?? 'img/default.jpg') }}" alt="{{ $product->name }}" id="mainImage" />
                 <div class="gallery-thumbnails">
-                    <img src="{{ asset('storage/' . ($product->image ?? 'img/default.jpg')) }}" alt="{{ $product->name }}" class="active" onclick="changeImage(this)" />
+                    <img src="{{ asset($product->image ?? 'img/default.jpg') }}" alt="{{ $product->name }}" class="active" onclick="changeImage(this)" />
                     {{-- Bạn có thể thêm vòng lặp ở đây nếu sản phẩm có nhiều ảnh --}}
                 </div>
             </div>
@@ -53,7 +53,7 @@
                         data-id="{{ $product->id }}"
                         data-name="{{ $product->name }}" 
                         data-price="{{ $product->price }}"
-                        data-image="{{ asset('storage/' . ($product->image ?? 'img/default.jpg')) }}">
+                        data-image="{{ asset($product->image ?? 'img/default.jpg') }}">
                         <svg class="icon-sm" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
                             <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
                             <line x1="3" y1="6" x2="21" y2="6" />
@@ -80,14 +80,14 @@
                 <article class="product-card">
                     <div class="card-image">
                         <a href="{{ route('fe.product.detail', $item->slug) }}">
-                            <img src="{{ asset('storage/' . ($item->image ?? 'img/default.jpg')) }}" alt="{{ $item->name }}" loading="lazy" />
+                            <img src="{{ asset($item->image ?? 'img/default.jpg') }}" alt="{{ $item->name }}" loading="lazy" />
                         </a>
                         <div class="card-image-overlay"></div>
                         <button class="add-to-cart-btn btn-add-to-cart" 
                             data-id="{{ $item->id }}"
                             data-name="{{ $item->name }}" 
                             data-price="{{ $item->price }}"
-                            data-image="{{ asset('storage/' . ($item->image ?? 'img/default.jpg')) }}">
+                            data-image="{{ asset($item->image ?? 'img/default.jpg') }}">
                             <svg class="icon-sm" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
                                 <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
                                 <line x1="3" y1="6" x2="21" y2="6" />

@@ -34,8 +34,12 @@ class ProductManagementController extends Controller
         $validated['slug'] = Str::slug($request->name);
 
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
-            $validated['image'] = $imagePath;
+            $file = $request->file('image');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            
+            // Di chuyển ảnh vào public/uploads/products
+            $file->move(public_path('uploads/products'), $fileName);
+            $validated['image'] = 'uploads/products/' . $fileName;
         }
 
         Product::create($validated);
@@ -62,11 +66,15 @@ class ProductManagementController extends Controller
 
         if ($request->hasFile('image')) {
             // Delete old image if exists
-            if ($product->image) {
-                Storage::disk('public')->delete($product->image);
+            if ($product->image && file_exists(public_path($product->image))) {
+                unlink(public_path($product->image));
             }
-            $imagePath = $request->file('image')->store('products', 'public');
-            $validated['image'] = $imagePath;
+            
+            $file = $request->file('image');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            
+            $file->move(public_path('uploads/products'), $fileName);
+            $validated['image'] = 'uploads/products/' . $fileName;
         }
 
         $product->update($validated);
@@ -76,8 +84,8 @@ class ProductManagementController extends Controller
 
     public function destroy(Product $product)
     {
-        if ($product->image) {
-            Storage::disk('public')->delete($product->image);
+        if ($product->image && file_exists(public_path($product->image))) {
+            unlink(public_path($product->image));
         }
         $product->delete();
         return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được xóa thành công!');

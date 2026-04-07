@@ -9,7 +9,7 @@
             <div class="banner-slider">
                 @foreach ($slides as $slide)
                     <div class="hero-slide-item">
-                        <img src="{{ asset('storage/' . $slide->images) }}" alt="{{ $slide->title }}">
+                        <img src="{{ asset($slide->images) }}" alt="{{ $slide->title }}">
                         <div class="container hero-slider__copy">
                             @if ($slide->subtitle)
                                 <p class="hero-label">{{ $slide->subtitle }}</p>
@@ -49,7 +49,7 @@
                 <article class="product-card">
                     <div class="card-image">
                         <a href="{{ route('fe.product.detail', $product->slug) }}">
-                            <img src="{{ asset('storage/' . ($product->image ?? 'img/default.jpg')) }}"
+                            <img src="{{ asset($product->image ?? 'img/default.jpg') }}"
                                 alt="{{ $product->name }}" loading="lazy" />
                         </a>
                         <div class="card-image-overlay"></div>
@@ -59,7 +59,7 @@
                         @endif
                         <button class="add-to-cart-btn btn-add-to-cart" data-id="{{ $product->id }}"
                             data-name="{{ $product->name }}" data-price="{{ $product->price }}"
-                            data-image="{{ asset('storage/' . ($product->image ?? 'img/default.jpg')) }}">
+                            data-image="{{ asset($product->image ?? 'img/default.jpg') }}">
                             <svg class="icon-sm" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
                                 <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
                                 <line x1="3" y1="6" x2="21" y2="6" />
