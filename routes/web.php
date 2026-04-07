@@ -11,10 +11,24 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
 Route::get('/init-db', function () {
-    Artisan::call('migrate:fresh --seed --force');
-    return "Database đã được khởi tạo và migrate thành công!";
-});
+    try {
+        // 1. Khởi tạo lại Database (Xóa sạch và tạo mới)
+        Artisan::call('migrate:fresh', [
+            '--force' => true,
+            '--seed' => true
+        ]);
 
+        // 2. Tạo link kết nối thư mục storage với public
+        Artisan::call('storage:link');
+
+        // 3. (Tùy chọn) Xóa cache cấu hình để nhận thông số mới nhất
+        Artisan::call('config:clear');
+
+        return "Chúc mừng! Database đã migrate, seed và tạo Storage Link thành công!";
+    } catch (\Exception $e) {
+        return "Có lỗi xảy ra: " . $e->getMessage();
+    }
+});
 /**
  * Frontend Routes
  */
