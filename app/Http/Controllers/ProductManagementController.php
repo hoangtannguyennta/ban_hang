@@ -40,7 +40,10 @@ class ProductManagementController extends Controller
                 // Làm sạch tên file để tránh lỗi hệ thống Linux
                 $fileName = time() . '_' . preg_replace('/[^A-Za-z0-9\-._]/', '', $file->getClientOriginalName());
                 $uploadPath = public_path('uploads/products');
+                
                 File::ensureDirectoryExists($uploadPath, 0755, true);
+                @chmod($uploadPath, 0777); // Cấp quyền ghi tối đa cho Render
+                
                 $file->move($uploadPath, $fileName);
                 $validated['image'] = 'uploads/products/' . $fileName;
             } catch (\Exception $e) {
@@ -79,7 +82,10 @@ class ProductManagementController extends Controller
                 $file = $request->file('image');
                 $fileName = time() . '_' . preg_replace('/[^A-Za-z0-9\-._]/', '', $file->getClientOriginalName());
                 $uploadPath = public_path('uploads/products');
+                
                 File::ensureDirectoryExists($uploadPath, 0755, true);
+                @chmod($uploadPath, 0777); // Đảm bảo thư mục có thể ghi
+                
                 $file->move($uploadPath, $fileName);
                 $validated['image'] = 'uploads/products/' . $fileName;
             } catch (\Exception $e) {

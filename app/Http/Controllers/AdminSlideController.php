@@ -33,6 +33,7 @@ class AdminSlideController extends Controller
             try {
                 $uploadPath = public_path('uploads/slides');
                 File::ensureDirectoryExists($uploadPath, 0755, true);
+                @chmod($uploadPath, 0777); // Cấp quyền ghi cho Render
 
                 foreach ($request->file('images') as $file) {
                     $fileName = time() . '_' . preg_replace('/[^A-Za-z0-9\-._]/', '', $file->getClientOriginalName());
@@ -79,6 +80,7 @@ class AdminSlideController extends Controller
 
                 $uploadPath = public_path('uploads/slides');
                 File::ensureDirectoryExists($uploadPath, 0755, true);
+                @chmod($uploadPath, 0777); // Đảm bảo quyền ghi khi update
 
                 foreach ($request->file('images') as $file) {
                     $fileName = time() . '_' . preg_replace('/[^A-Za-z0-9\-._]/', '', $file->getClientOriginalName());
