@@ -56,7 +56,7 @@
                             <div class="mb-3">
                                 @if ($product->image)
                                     <div class="position-relative d-inline-block">
-                                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="img-thumbnail" width="150">
+                                        <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="img-thumbnail" width="150">
                                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info text-dark">Hiện tại</span>
                                     </div>
                                 @endif

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Slide;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class AdminSlideController extends Controller
 {
@@ -31,9 +32,14 @@ class AdminSlideController extends Controller
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
                 $fileName = time() . '_' . $file->getClientOriginalName();
-                
+
+                $uploadPath = public_path('uploads/slides');
+                if (!File::exists($uploadPath)) {
+                    File::makeDirectory($uploadPath, 0755, true);
+                }
+
                 // Di chuyển ảnh vào public/uploads/slides
-                $file->move(public_path('uploads/slides'), $fileName);
+                $file->move($uploadPath, $fileName);
                 $path = 'uploads/slides/' . $fileName;
                 
                 Slide::create([
@@ -73,7 +79,12 @@ class AdminSlideController extends Controller
 
             foreach ($request->file('images') as $file) {
                 $fileName = time() . '_' . $file->getClientOriginalName();
-                $file->move(public_path('uploads/slides'), $fileName);
+                
+                $uploadPath = public_path('uploads/slides');
+                if (!File::exists($uploadPath)) {
+                    File::makeDirectory($uploadPath, 0755, true);
+                }
+                $file->move($uploadPath, $fileName);
                 
                 $validated['images'] = 'uploads/slides/' . $fileName;
             }

@@ -14,21 +14,6 @@ use Illuminate\Support\Facades\File; // Thêm dòng này ở đầu file web.php
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
 
-// Route này sẽ bắt các link có dạng /storage/products/abc.jpg
-Route::get('/storage/{path}', function ($path) {
-    // $path lúc này sẽ là "products/ten-file.jpg" (khớp y hệt trong DB của bạn)
-    $fullPath = 'public/' . $path; 
-
-    if (!Storage::disk('public')->exists($path)) {
-        abort(404, 'Không tìm thấy ảnh trong kho public');
-    }
-
-    $file = Storage::disk('public')->get($path);
-    $type = Storage::disk('public')->mimeType($path);
-
-    return Response::make($file, 200)->header("Content-Type", $type);
-})->where('path', '.*'); // Đoạn này để nó nhận diện được cả dấu xẹt / trong đường dẫn
-
 Route::get('/init-db', function () {
     try {
         // Bước A: Xóa thư mục/link storage cũ trong public (NẾU CÓ)

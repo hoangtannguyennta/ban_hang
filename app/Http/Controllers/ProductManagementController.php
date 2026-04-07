@@ -7,6 +7,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class ProductManagementController extends Controller
 {
@@ -36,9 +37,14 @@ class ProductManagementController extends Controller
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $fileName = time() . '_' . $file->getClientOriginalName();
-            
+
+            $uploadPath = public_path('uploads/products');
+            if (!File::exists($uploadPath)) {
+                File::makeDirectory($uploadPath, 0755, true);
+            }
+
             // Di chuyển ảnh vào public/uploads/products
-            $file->move(public_path('uploads/products'), $fileName);
+            $file->move($uploadPath, $fileName);
             $validated['image'] = 'uploads/products/' . $fileName;
         }
 
@@ -72,8 +78,13 @@ class ProductManagementController extends Controller
             
             $file = $request->file('image');
             $fileName = time() . '_' . $file->getClientOriginalName();
-            
-            $file->move(public_path('uploads/products'), $fileName);
+
+            $uploadPath = public_path('uploads/products');
+            if (!File::exists($uploadPath)) {
+                File::makeDirectory($uploadPath, 0755, true);
+            }
+
+            $file->move($uploadPath, $fileName);
             $validated['image'] = 'uploads/products/' . $fileName;
         }
 
