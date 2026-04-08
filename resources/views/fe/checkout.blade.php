@@ -133,6 +133,32 @@
         font-size: 0.85rem;
     }
 
+    /* Tinh chỉnh selector số lượng trong tóm tắt */
+    .summary-qty-selector {
+        display: flex;
+        align-items: center;
+        border: 1px solid #eee;
+        margin-top: 8px;
+        width: fit-content;
+    }
+    .summary-qty-btn {
+        background: none;
+        border: none;
+        padding: 2px 12px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: 0.2s;
+    }
+    .summary-qty-btn:hover { background: #f8f9fa; }
+    .summary-qty-value {
+        width: 30px;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 700;
+        border-left: 1px solid #eee;
+        border-right: 1px solid #eee;
+    }
+
     /* 5. Tổng thanh toán: To, rõ, không rườm rà */
     .checkout-total-row {
         padding-top: 2rem;
@@ -273,12 +299,17 @@
                 $summary.empty();
                 cart.forEach(item => {
                     total += item.price * item.qty;
-                    $summary.append(`<div class="summary-item">
+                    $summary.append(`
+            <div class="summary-item">
                 <img src="${item.image}" alt="${item.name}" class="summary-product-img">
                 <div class="summary-product-info">
                     <span class="summary-product-name">${item.name}</span>
                     <div class="d-flex justify-content-between align-items-center">
-                        <span class="text-muted small">Số lượng: ${item.qty}</span>
+                        <div class="summary-qty-selector">
+                            <button type="button" class="summary-qty-btn btn-minus" data-id="${item.id}">−</button>
+                            <span class="summary-qty-value">${item.qty}</span>
+                            <button type="button" class="summary-qty-btn btn-plus" data-id="${item.id}">+</button>
+                        </div>
                         <span class="summary-product-price">${new Intl.NumberFormat('vi-VN').format(item.price * item.qty)}₫</span>
                     </div>
                 </div>
@@ -298,6 +329,24 @@
             }
 
             renderSummary();
+
+            // Xử lý thay đổi số lượng trong tóm tắt đơn hàng
+            $(document).on('click', '.summary-qty-btn', function() {
+                const id = $(this).data('id');
+                const isPlus = $(this).hasClass('btn-plus');
+                const index = cart.findIndex(item => item.id == id);
+
+                if (index !== -1) {
+                    if (isPlus) {
+                        cart[index].qty++;
+                    } else if (cart[index].qty > 1) {
+                        cart[index].qty--;
+                    }
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    renderSummary();
+                    if (typeof updateCartUI === 'function') updateCartUI();
+                }
+            });
 
             $('#checkoutForm').on('submit', function(e) {
                 e.preventDefault();
