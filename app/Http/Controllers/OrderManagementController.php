@@ -12,7 +12,7 @@ class OrderManagementController extends Controller
 {
     public function index()
     {
-        $orders = Order::with('user')->latest()->paginate(10);
+        $orders = Order::latest()->paginate(10);
         return view('orders.index', compact('orders'));
     }
 
@@ -26,17 +26,18 @@ class OrderManagementController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'name' => 'required|string|max:255',
             'shipping_address' => 'required|string|max:500',
             'phone_number' => 'required|string|max:20',
             'status' => 'required|in:pending,processing,completed,cancelled',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.quantity' => 'required|integer|min:1',
+            'items.*.size' => 'nullable|string',
         ]);
 
         $order = Order::create([
-            'user_id' => $validated['user_id'],
+            'name' => $validated['name'],
             'shipping_address' => $validated['shipping_address'],
             'phone_number' => $validated['phone_number'],
             'status' => $validated['status'],
@@ -52,6 +53,7 @@ class OrderManagementController extends Controller
                 'order_id' => $order->id,
                 'product_id' => $product->id,
                 'quantity' => $item['quantity'],
+                'size' => $item['size'] ?? null,
                 'price' => $price,
             ]);
             $total += $price * $item['quantity'];
@@ -63,7 +65,7 @@ class OrderManagementController extends Controller
 
     public function show(Order $order)
     {
-        $order->load(['user', 'items.product']);
+        $order->load(['items.product']);
         return view('orders.show', compact('order'));
     }
 

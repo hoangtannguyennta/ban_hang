@@ -303,7 +303,7 @@
             <div class="summary-item">
                 <img src="${item.image}" alt="${item.name}" class="summary-product-img">
                 <div class="summary-product-info">
-                    <span class="summary-product-name">${item.name}</span>
+                    <span class="summary-product-name">${item.name} <small class="text-muted">(Size: ${item.size})</small></span>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="summary-qty-selector">
                             <button type="button" class="summary-qty-btn btn-minus" data-id="${item.id}">−</button>
@@ -322,7 +322,8 @@
                 const formattedCart = cart.map(item => ({
                     id: item.id,      // ID của sản phẩm trong database
                     qty: item.qty,    // Số lượng
-                    price: item.price // Giá tại thời điểm đặt
+                    price: item.price, // Giá tại thời điểm đặt
+                    size: item.size   // Size đã chọn
                 }));
                 
                 $('#cartDataInput').val(JSON.stringify(formattedCart));

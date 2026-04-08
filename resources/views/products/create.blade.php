@@ -29,6 +29,15 @@
                             @enderror
                         </div>
 
+                        <div class="mb-3">
+                            <label for="sizes" class="form-label fw-semibold">Kích cỡ (Sizes)</label>
+                            <input type="text" class="form-control @error('sizes') is-invalid @enderror" name="sizes" id="sizes" value="{{ old('sizes') }}" placeholder="Ví dụ: S, M, L hoặc 38, 39, 40...">
+                            <div class="form-text">Nhập các kích cỡ cách nhau bằng dấu phẩy.</div>
+                            @error('sizes')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="price" class="form-label fw-semibold">Giá bán (VNĐ)</label>
@@ -52,8 +61,11 @@
 
                         <div class="mb-4">
                             <label for="images" class="form-label fw-semibold">Hình ảnh minh họa</label>
-                            <input type="file" class="form-control @error('images') is-invalid @enderror" name="images" id="images">
+                            <input type="file" class="form-control @error('images') is-invalid @enderror" name="images" id="images" onchange="previewImage(this)">
                             <div class="form-text">Định dạng hỗ trợ: JPG, PNG, WEBP.</div>
+                            <div id="image-preview-container" class="mt-3 d-none">
+                                <img id="image-preview" src="#" alt="Preview" class="img-thumbnail" width="200">
+                            </div>
                             @error('images')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
@@ -71,3 +83,24 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    function previewImage(input) {
+        const preview = document.getElementById('image-preview');
+        const container = document.getElementById('image-preview-container');
+        
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                container.classList.remove('d-none');
+            }
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            preview.src = '#';
+            container.classList.add('d-none');
+        }
+    }
+</script>
+@endpush

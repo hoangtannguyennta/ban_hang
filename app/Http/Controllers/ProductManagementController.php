@@ -83,9 +83,17 @@ class ProductManagementController extends Controller
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'images' => 'nullable|image',
+            'sizes' => 'nullable|string',
         ]);
 
         $validated['slug'] = Str::slug($request->name);
+        
+        // Chuyển chuỗi "S, M, L" thành mảng ['S', 'M', 'L']
+        if ($request->filled('sizes')) {
+            $validated['sizes'] = array_map('trim', explode(',', $request->sizes));
+        } else {
+            $validated['sizes'] = null;
+        }
 
         if ($request->hasFile('images')) {
             try {
@@ -114,9 +122,17 @@ class ProductManagementController extends Controller
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'images' => 'nullable|image',
+            'sizes' => 'nullable|string',
         ]);
 
         $validated['slug'] = Str::slug($request->name);
+        
+        // Chuyển chuỗi "S, M, L" thành mảng ['S', 'M', 'L']
+        if ($request->filled('sizes')) {
+            $validated['sizes'] = array_map('trim', explode(',', $request->sizes));
+        } else {
+            $validated['sizes'] = null;
+        }
 
         if ($request->hasFile('images')) {
             try {

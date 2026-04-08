@@ -12,6 +12,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Khách hàng</th>
+                        <th>Kích cỡ</th>
                         <th>Tổng tiền</th>
                         <th>Trạng thái</th>
                         <th>Ngày đặt</th>
@@ -25,6 +26,9 @@
                         <td>
                             <div class="fw-bold">{{ $order?->user?->name }}</div>
                             <small class="text-muted">{{ $order->phone_number }}</small>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark border">{{ $order->items->pluck('size')->filter()->unique()->implode(', ') ?: 'N/A' }}</span>
                         </td>
                         <td class="text-primary fw-bold">{{ number_format($order->total_amount) }} ₫</td>
                         <td>
@@ -55,7 +59,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="text-center">Không có đơn hàng nào.</td>
+                        <td colspan="7" class="text-center">Không có đơn hàng nào.</td>
                     </tr>
                     @endforelse
                 </tbody>

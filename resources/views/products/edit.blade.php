@@ -30,6 +30,15 @@
                             @enderror
                         </div>
 
+                        <div class="mb-3">
+                            <label for="sizes" class="form-label fw-semibold">Kích cỡ (Sizes)</label>
+                            <input type="text" class="form-control @error('sizes') is-invalid @enderror" name="sizes" id="sizes" value="{{ old('sizes', is_array($product->sizes) ? implode(', ', $product->sizes) : '') }}" placeholder="Ví dụ: S, M, L hoặc 38, 39, 40...">
+                            <div class="form-text">Nhập các kích cỡ cách nhau bằng dấu phẩy.</div>
+                            @error('sizes')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="price" class="form-label fw-semibold">Giá bán (VNĐ)</label>
@@ -53,15 +62,23 @@
 
                         <div class="mb-4">
                             <label for="images" class="form-label fw-semibold">Hình ảnh sản phẩm</label>
-                            <div class="mb-3">
+                            <div class="mb-3" id="current-image-container">
                                 @if ($product->images)
                                     <div class="position-relative d-inline-block">
-                                        <img src="{{ asset($product->images) }}" alt="{{ $product->name }}" class="img-thumbnail" width="150">
+                                        <img src="{{ $product->images }}" alt="{{ $product->name }}" class="img-thumbnail" width="150">
                                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info text-dark">Hiện tại</span>
                                     </div>
                                 @endif
                             </div>
-                            <input type="file" class="form-control @error('images') is-invalid @enderror" name="images" id="images">
+                            
+                            <div id="new-image-preview-container" class="mb-3 d-none">
+                                <div class="position-relative d-inline-block">
+                                    <img id="new-image-preview" src="#" alt="New Preview" class="img-thumbnail" width="150">
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success text-white">Mới</span>
+                                </div>
+                            </div>
+
+                            <input type="file" class="form-control @error('images') is-invalid @enderror" name="images" id="images" onchange="previewNewImage(this)">
                             <div class="form-text text-muted">Chọn file mới nếu bạn muốn thay đổi hình ảnh.</div>
                             @error('images')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -80,3 +97,27 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    function previewNewImage(input) {
+        const preview = document.getElementById('new-image-preview');
+        const container = document.getElementById('new-image-preview-container');
+        const currentContainer = document.getElementById('current-image-container');
+        
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                container.classList.remove('d-none');
+                if (currentContainer) currentContainer.style.opacity = '0.5';
+            }
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            preview.src = '#';
+            container.classList.add('d-none');
+            if (currentContainer) currentContainer.style.opacity = '1';
+        }
+    }
+</script>
+@endpush

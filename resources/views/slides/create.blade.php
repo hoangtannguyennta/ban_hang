@@ -49,6 +49,7 @@
                     <div class="col-md-12 mb-3">
                         <label for="images" class="form-label">Chọn hình ảnh (Có thể chọn nhiều)</label>
                         <input type="file" class="form-control @error('images') is-invalid @enderror" id="images" name="images[]" multiple required accept="image/*">
+                        <div id="image-preview-container" class="mt-3 d-flex flex-wrap gap-2"></div>
                         <div class="form-text text-muted">Mỗi tấm ảnh được chọn sẽ tạo thành một Slide riêng biệt với cùng nội dung trên.</div>
                         @error('images')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -71,3 +72,24 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        $('#images').on('change', function() {
+            const container = $('#image-preview-container');
+            container.empty();
+            const files = this.files;
+            if (files) {
+                Array.from(files).forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        $('<img>').attr('src', e.target.result).addClass('img-thumbnail').css({'max-height': '150px', 'object-fit': 'cover'}).appendTo(container);
+                    }
+                    reader.readAsDataURL(file);
+                });
+            }
+        });
+    });
+</script>
+@endpush

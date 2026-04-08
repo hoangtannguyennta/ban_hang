@@ -20,7 +20,7 @@ class OrderSeeder extends Seeder
             // Mỗi user tạo 1-2 đơn hàng
             for ($i = 0; $i < rand(1, 2); $i++) {
                 $order = Order::create([
-                    'user_id' => $user->id,
+                    'name' => $user->name,
                     'total_amount' => 0, // Sẽ tính toán lại sau khi thêm item
                     'status' => $statuses[array_rand($statuses)],
                     'shipping_address' => 'Số ' . rand(1, 100) . ' Đường ABC, Quận XYZ, TP.HCM',
@@ -33,11 +33,14 @@ class OrderSeeder extends Seeder
                 foreach ($randomProducts as $product) {
                     $qty = rand(1, 2);
                     $price = $product->price;
+                    // Lấy ngẫu nhiên 1 size từ danh sách size của sản phẩm
+                    $size = !empty($product->sizes) ? $product->sizes[array_rand($product->sizes)] : null;
                     
                     OrderItem::create([
                         'order_id' => $order->id,
                         'product_id' => $product->id,
                         'quantity' => $qty,
+                        'size' => $size,
                         'price' => $price,
                     ]);
                     $total += $price * $qty;

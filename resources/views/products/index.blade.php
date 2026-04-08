@@ -19,6 +19,7 @@
                             <th>Hình ảnh</th>
                             <th>Tên sản phẩm</th>
                             <th>Giá bán</th>
+                            <th>Kích cỡ</th>
                             <th>Kho hàng</th>
                             <th class="text-end">Hành động</th>
                         </tr>
@@ -41,6 +42,15 @@
                                     <small class="text-muted">{{ $product->slug }}</small>
                                 </td>
                                 <td class="text-primary fw-semibold">{{ number_format($product->price) }} VNĐ</td>
+                                <td>
+                                    @if($product->sizes && is_array($product->sizes))
+                                        @foreach($product->sizes as $size)
+                                            <span class="badge bg-secondary-subtle text-secondary" style="font-size: 10px;">{{ $size }}</span>
+                                        @endforeach
+                                    @else
+                                        <span class="text-muted small">N/A</span>
+                                    @endif
+                                </td>
                                 <td>
                                     <span class="badge {{ $product->stock > 0 ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' }}">
                                         {{ $product->stock }} sản phẩm

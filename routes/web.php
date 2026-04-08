@@ -25,6 +25,7 @@ Route::get('/init-db', function () {
         // 1. Khởi tạo lại Database
         Artisan::call('migrate:fresh', [
             '--force' => true,
+            '--seed' => true,
         ]);
 
         // 2. Tạo link kết nối MỚI
@@ -32,6 +33,10 @@ Route::get('/init-db', function () {
 
         // 3. Xóa cache
         Artisan::call('config:clear');
+
+        Artisan::call('optimize:clear');
+
+        Artisan::call('optimize');
 
         return "Khởi tạo thành công! Link Storage đã được làm mới.";
     } catch (\Exception $e) {

@@ -51,11 +51,12 @@
                         <label for="images" class="form-label">Thay đổi hình ảnh (Để trống nếu giữ nguyên)</label>
                         <input type="file" class="form-control @error('images') is-invalid @enderror" id="images" name="images[]" accept="image/*">
                         
-                        <div class="mt-3">
+                        <div id="image-preview-container" class="mt-3"></div>
+
+                        <div class="mt-3" id="current-image-wrapper">
                             <p class="mb-2 text-muted small">Ảnh hiện tại:</p>
                             <img src="{{ $slide->images }}" alt="{{ $slide->title }}" class="img-thumbnail" style="max-height: 200px;">
                         </div>
-
                         @error('images')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
@@ -74,3 +75,27 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        $('#images').on('change', function() {
+            const container = $('#image-preview-container');
+            container.empty();
+            const files = this.files;
+            if (files && files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    $('<p class="mb-2 text-primary small">Xem trước ảnh mới:</p>').appendTo(container);
+                    $('<img>').attr('src', e.target.result).addClass('img-thumbnail').css('max-height', '200px').appendTo(container);
+                    // Làm mờ ảnh cũ để nhấn mạnh ảnh mới
+                    $('#current-image-wrapper').css('opacity', '0.4');
+                }
+                reader.readAsDataURL(files[0]);
+            } else {
+                $('#current-image-wrapper').css('opacity', '1');
+            }
+        });
+    });
+</script>
+@endpush

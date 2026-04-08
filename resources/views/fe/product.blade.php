@@ -108,6 +108,24 @@
             font-weight: 600;
         }
 
+        .size-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .size-option {
+            border: 1px solid #ddd;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: 0.3s;
+        }
+        .size-option.active {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
         .detail-actions {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -214,7 +232,16 @@
                     <span class="price-sale">{{ number_format($product->price, 0, ',', '.') }}₫</span>
                 </div>
 
-                <p class="detail-desc">{{ $product->desc }}</p>
+                <p class="detail-desc">{{ $product->description }}</p>
+
+                <div class="mb-4">
+                    <label class="form-label d-block mb-2" style="font-size: 11px; letter-spacing: 1px;">Chọn Size</label>
+                    <div class="size-selector" id="sizeSelector">
+                        @foreach($product->sizes ?? ['S', 'M', 'L', 'XL'] as $size)
+                            <div class="size-option" data-size="{{ $size }}">{{ $size }}</div>
+                        @endforeach
+                    </div>
+                </div>
 
                 <div class="quantity-selector">
                     <label>Số lượng</label>
@@ -287,6 +314,12 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+            // Chọn size
+            $('.size-option').on('click', function() {
+                $('.size-option').removeClass('active');
+                $(this).addClass('active');
+            });
+
             // Thay đổi ảnh sản phẩm (Gallery) dùng jQuery
             $('.gallery-thumbnails img').on('click', function() {
                 const src = $(this).attr('src');
@@ -309,17 +342,24 @@
             // Thêm vào giỏ hàng tại trang chi tiết
             $('#btn-add-to-cart-detail').on('click', function() {
                 let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                const selectedSize = $('.size-option.active').data('size');
+                
+                if (!selectedSize) {
+                    alert('Vui lòng chọn size!');
+                    return;
+                }
+
                 const id = $(this).data('id');
                 const name = $(this).data('name');
                 const price = $(this).data('price');
                 const image = $(this).data('image');
                 const qty = parseInt($('#detailQty').text());
 
-                const existingItem = cart.find(item => item.id == id);
+                const existingItem = cart.find(item => item.id == id && item.size == selectedSize);
                 if (existingItem) {
                     existingItem.qty += qty;
                 } else {
-                    cart.push({ id, name, price, image, qty });
+                    cart.push({ id, name, price, image, qty, size: selectedSize });
                 }
 
                 localStorage.setItem('cart', JSON.stringify(cart));

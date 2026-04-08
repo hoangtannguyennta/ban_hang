@@ -17,6 +17,7 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Sản phẩm</th>
+                                <th class="text-center">Kích cỡ</th>
                                 <th class="text-end">Đơn giá</th>
                                 <th class="text-center">Số lượng</th>
                                 <th class="text-end">Thành tiền</th>
@@ -39,6 +40,7 @@
                                         </div>
                                     </div>
                                 </td>
+                                <td class="text-center"><span class="badge bg-secondary">{{ $item->size ?? 'N/A' }}</span></td>
                                 <td class="text-end">{{ number_format($item->price) }} ₫</td>
                                 <td class="text-center">{{ $item->quantity }}</td>
                                 <td class="text-end fw-bold">{{ number_format($item->price * $item->quantity) }} ₫</td>
@@ -47,7 +49,7 @@
                         </tbody>
                         <tfoot class="table-light">
                             <tr>
-                                <td colspan="3" class="text-end fw-bold">Tổng cộng:</td>
+                                <td colspan="4" class="text-end fw-bold">Tổng cộng:</td>
                                 <td class="text-end text-primary fw-bold fs-5">{{ number_format($order->total_amount) }} ₫</td>
                             </tr>
                         </tfoot>
