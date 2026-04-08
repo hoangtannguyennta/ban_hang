@@ -137,6 +137,43 @@
         .detail-meta div { margin-bottom: 10px; display: flex; gap: 20px; }
         .detail-meta strong { width: 100px; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; }
 
+        /* Black & White Product Card for Related Section */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        .product-card { border: none; transition: all 0.3s ease; position: relative; }
+        .card-image { position: relative; overflow: hidden; background: #f9f9f9; }
+        .card-image img { width: 100%; height: auto; transition: transform 0.5s ease; }
+        .product-card:hover img { transform: scale(1.05); }
+        
+        .add-to-cart-btn {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            text-transform: uppercase;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            opacity: 0;
+            transform: translateY(100%);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .product-card:hover .add-to-cart-btn { opacity: 1; transform: translateY(0); }
+        
+        .card-name a { font-weight: 600; text-transform: uppercase; font-size: 13px; color: #000; text-decoration: none; letter-spacing: 0.5px; }
+        .price-sale { font-weight: 500; color: #000; font-size: 14px; }
+
         @media (max-width: 768px) {
             .detail-grid { grid-template-columns: 1fr; gap: 30px; }
             .detail-name { font-size: 1.8rem; }
@@ -191,7 +228,7 @@
                         data-id="{{ $product->id }}"
                         data-name="{{ $product->name }}" 
                         data-price="{{ $product->price }}"
-                        data-image="{{ $product->image ?? 'img/default.jpg' }}">
+                        data-image="{{ $product->images ?? asset('img/default.jpg') }}">
                         <svg class="icon-sm" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
                             <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
                             <line x1="3" y1="6" x2="21" y2="6" />
@@ -218,15 +255,14 @@
                 <article class="product-card">
                     <div class="card-image">
                         <a href="{{ route('fe.product.detail', $item->slug) }}">
-                            <img src="{{ $item->images ?? 'img/default.jpg' }}" alt="{{ $item->name }}" loading="lazy" />
+                            <img src="{{ $item->images ?? asset('img/default.jpg') }}" alt="{{ $item->name }}" loading="lazy" />
                         </a>
-                        <div class="card-image-overlay"></div>
                         <button class="add-to-cart-btn btn-add-to-cart" 
                             data-id="{{ $item->id }}"
                             data-name="{{ $item->name }}" 
                             data-price="{{ $item->price }}"
-                            data-image="{{ asset($item->image ?? 'img/default.jpg') }}">
-                            <svg class="icon-sm" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
+                            data-image="{{ $item->images ?? asset('img/default.jpg') }}">
+                            <svg style="width:16px; height:16px" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
                                 <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
                                 <line x1="3" y1="6" x2="21" y2="6" />
                                 <path d="M16 10a4 4 0 01-8 0" />
@@ -235,7 +271,6 @@
                         </button>
                     </div>
                     <div class="card-info">
-                        <p class="card-brand" style="color: var(--fg-muted); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase;">Brand Name</p>
                         <h3 class="card-name">
                             <a href="{{ route('fe.product.detail', $item->slug) }}">{{ $item->name }}</a>
                         </h3>
