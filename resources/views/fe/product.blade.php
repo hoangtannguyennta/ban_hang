@@ -224,7 +224,7 @@
                 </div>
 
                 <div class="detail-actions">
-                    <button class="btn-add-cart" id="btn-add-to-cart-detail" style="margin: 15px 0"
+                    <button class="btn-add-cart" id="btn-add-to-cart-detail"
                         data-id="{{ $product->id }}"
                         data-name="{{ $product->name }}" 
                         data-price="{{ $product->price }}"
@@ -257,7 +257,7 @@
                         <a href="{{ route('fe.product.detail', $item->slug) }}">
                             <img src="{{ $item->images ?? asset('img/default.jpg') }}" alt="{{ $item->name }}" loading="lazy" />
                         </a>
-                        <button class="add-to-cart-btn btn-add-to-cart" 
+                        <button class="add-to-cart-btn btn-add-to-cart" style="margin-bottom: 15px"
                             data-id="{{ $item->id }}"
                             data-name="{{ $item->name }}" 
                             data-price="{{ $item->price }}"
