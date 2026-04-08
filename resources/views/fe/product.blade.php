@@ -191,7 +191,7 @@
                         data-id="{{ $product->id }}"
                         data-name="{{ $product->name }}" 
                         data-price="{{ $product->price }}"
-                        data-image="{{ asset($product->image ?? 'img/default.jpg') }}">
+                        data-image="{{ $product->image ?? 'img/default.jpg' }}">
                         <svg class="icon-sm" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
                             <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
                             <line x1="3" y1="6" x2="21" y2="6" />
