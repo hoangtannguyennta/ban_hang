@@ -145,7 +145,7 @@
         }
         .product-card { border: none; transition: all 0.3s ease; position: relative; }
         .card-image { position: relative; overflow: hidden; background: #f9f9f9; }
-        .card-image img { width: 100%; height: auto; transition: transform 0.5s ease; }
+        .card-image img { width: 100%; transition: transform 0.5s ease; }
         .product-card:hover img { transform: scale(1.05); }
         
         .add-to-cart-btn {
@@ -224,7 +224,7 @@
                 </div>
 
                 <div class="detail-actions">
-                    <button class="btn-add-cart" id="btn-add-to-cart-detail" 
+                    <button class="btn-add-cart" id="btn-add-to-cart-detail" style="margin: 15px 0"
                         data-id="{{ $product->id }}"
                         data-name="{{ $product->name }}" 
                         data-price="{{ $product->price }}"
