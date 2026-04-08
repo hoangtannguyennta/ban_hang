@@ -5,6 +5,144 @@
 @endsection
 
 @section('content')
+    <style>
+        .product-detail {
+            padding-top: 50px;
+            padding-bottom: 80px;
+        }
+        .breadcrumb {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 40px;
+            color: #888;
+        }
+        .breadcrumb a { color: #888; text-decoration: none; }
+        .breadcrumb span.sep { margin: 0 10px; }
+        .breadcrumb span:last-child { color: #000; font-weight: 600; }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: start;
+        }
+        .detail-gallery img {
+            width: 100%;
+            height: auto;
+            display: block;
+            background: #f9f9f9;
+        }
+        .gallery-thumbnails {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .gallery-thumbnails img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: 0.3s;
+        }
+        .gallery-thumbnails img.active {
+            border-color: #000;
+        }
+
+        .detail-info .detail-brand {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .detail-name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+        .detail-stars {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 25px;
+        }
+        .star-icon.filled { fill: #000; }
+        .reviews-count { font-size: 13px; color: #666; margin-left: 10px; }
+
+        .detail-prices { margin-bottom: 30px; }
+        .price-sale { font-size: 1.8rem; font-weight: 500; color: #000; }
+
+        .detail-desc {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #444;
+            margin-bottom: 40px;
+            border-top: 1px solid #eee;
+            padding-top: 30px;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            border: 1px solid #000;
+            width: fit-content;
+            margin-bottom: 30px;
+        }
+        .quantity-selector label { display: none; }
+        .qty-btn {
+            background: none;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 300;
+        }
+        .qty-value {
+            width: 40px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .detail-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        .btn-add-cart, .btn-buy-now {
+            padding: 18px;
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-add-cart { background: #000; color: #fff; border: 1px solid #000; }
+        .btn-add-cart:hover { background: #333; }
+        .btn-buy-now { background: #fff; color: #000; border: 1px solid #000; }
+        .btn-buy-now:hover { background: #f5f5f5; }
+
+        .detail-meta { border-top: 1px solid #eee; padding-top: 30px; font-size: 13px; }
+        .detail-meta div { margin-bottom: 10px; display: flex; gap: 20px; }
+        .detail-meta strong { width: 100px; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; }
+
+        @media (max-width: 768px) {
+            .detail-grid { grid-template-columns: 1fr; gap: 30px; }
+            .detail-name { font-size: 1.8rem; }
+        }
+    </style>
+
     <!-- Product Detail -->
     <section class="product-detail container">
         <nav class="breadcrumb">
@@ -17,13 +155,13 @@
             <div class="detail-gallery">
                 <img src="{{ $product->images ?? 'img/default.jpg' }}" alt="{{ $product->name }}" id="mainImage" />
                 <div class="gallery-thumbnails">
-                    <img src="{{ $product->images ?? 'img/default.jpg' }}" alt="{{ $product->name }}" class="active" onclick="changeImage(this)" />
+                    <img src="{{ $product->images ?? 'img/default.jpg' }}" alt="{{ $product->name }}" class="active" />
                     {{-- Bạn có thể thêm vòng lặp ở đây nếu sản phẩm có nhiều ảnh --}}
                 </div>
             </div>
 
             <div class="detail-info">
-                <p class="detail-brand" style="color: var(--gold); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.75rem;">Fashion Store</p>
+                <p class="detail-brand">Fashion Store</p>
                 <h1 class="detail-name">{{ $product->name }}</h1>
 
                 <div class="detail-stars">
@@ -65,7 +203,7 @@
                 </div>
 
                 <div class="detail-meta">
-                    <div><strong>Tình trạng</strong><span style="color:var(--gold)">Còn hàng</span></div>
+                    <div><strong>Tình trạng</strong><span style="color:#000; font-weight: 600;">Còn hàng</span></div>
                     <div><strong>Vận chuyển</strong><span>Miễn phí toàn quốc</span></div>
                 </div>
             </div>
@@ -73,8 +211,8 @@
     </section>
 
     <!-- Related Products -->
-    <section class="related-section container">
-        <h2><span class="text-gold-gradient">Sản phẩm liên quan</span></h2>
+    <section class="related-section container" style="margin-top: 100px; border-top: 1px solid #eee; padding-top: 60px;">
+        <h2 style="text-align: center; text-transform: uppercase; letter-spacing: 4px; font-weight: 300; margin-bottom: 50px;">Sản phẩm liên quan</h2>
         <div class="product-grid" style="padding-bottom:2rem">
             @foreach ($relatedProducts as $item)
                 <article class="product-card">
@@ -113,59 +251,29 @@
 
 @push('scripts')
     <script>
-        function changeImage(el) {
-            document.getElementById('mainImage').src = el.src;
-            document.querySelectorAll('.gallery-thumbnails img').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
-        }
-
         $(document).ready(function() {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            // Thay đổi ảnh sản phẩm (Gallery) dùng jQuery
+            $('.gallery-thumbnails img').on('click', function() {
+                const src = $(this).attr('src');
+                $('#mainImage').attr('src', src);
+                $('.gallery-thumbnails img').removeClass('active');
+                $(this).addClass('active');
+            });
 
-            function updateCartUI() {
-                localStorage.setItem('cart', JSON.stringify(cart));
-                const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
-                $('.cart-badge').text(totalQty);
-                const $cartList = $('.cart-items');
-                if ($cartList.length) {
-                    $cartList.empty();
-                    let totalAmount = 0;
-                    if (cart.length === 0) {
-                        $cartList.html('<div class="cart-empty">Giỏ hàng của bạn đang trống.</div>');
-                    } else {
-                        cart.forEach(item => {
-                            totalAmount += item.price * item.qty;
-                            $cartList.append(`
-                                <div class="cart-item">
-                                    <img src="${item.image}" alt="${item.name}">
-                                    <div class="cart-item-info">
-                                        <div class="cart-item-name">${item.name}</div>
-                                        <div class="cart-item-price">${new Intl.NumberFormat('vi-VN').format(item.price)}₫</div>
-                                        <div class="cart-item-qty">
-                                            <button class="btn-qty" data-id="${item.id}" data-delta="-1">-</button>
-                                            <span>${item.qty}</span>
-                                            <button class="btn-qty" data-id="${item.id}" data-delta="1">+</button>
-                                        </div>
-                                        <button class="cart-remove" data-id="${item.id}">Xóa</button>
-                                    </div>
-                                </div>
-                            `);
-                        });
-                    }
-                    $('.total-price').text(new Intl.NumberFormat('vi-VN').format(totalAmount) + '₫');
-                }
-            }
-
-            $('#btn-plus').click(function() {
+            // Xử lý tăng giảm số lượng tại trang chi tiết
+            $('#btn-plus').on('click', function() {
                 let val = parseInt($('#detailQty').text());
                 $('#detailQty').text(val + 1);
             });
-            $('#btn-minus').click(function() {
+
+            $('#btn-minus').on('click', function() {
                 let val = parseInt($('#detailQty').text());
                 if (val > 1) $('#detailQty').text(val - 1);
             });
 
-            $('#btn-add-to-cart-detail').click(function() {
+            // Thêm vào giỏ hàng tại trang chi tiết
+            $('#btn-add-to-cart-detail').on('click', function() {
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
                 const id = $(this).data('id');
                 const name = $(this).data('name');
                 const price = $(this).data('price');
@@ -178,11 +286,15 @@
                 } else {
                     cart.push({ id, name, price, image, qty });
                 }
+
+                localStorage.setItem('cart', JSON.stringify(cart));
                 updateCartUI();
-                $('.cart-sidebar, .cart-overlay').addClass('open');
+                toggleCart(); // Tự động mở giỏ hàng khi thêm thành công
             });
 
+            // Thêm vào giỏ hàng cho các sản phẩm liên quan
             $(document).on('click', '.btn-add-to-cart', function() {
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
                 const id = $(this).data('id');
                 const name = $(this).data('name');
                 const price = $(this).data('price');
@@ -194,28 +306,11 @@
                 } else {
                     cart.push({ id, name, price, image, qty: 1 });
                 }
+
+                localStorage.setItem('cart', JSON.stringify(cart));
                 updateCartUI();
-                $('.cart-sidebar, .cart-overlay').addClass('open');
+                toggleCart();
             });
-
-            $(document).on('click', '.btn-qty', function() {
-                const id = $(this).data('id');
-                const delta = parseInt($(this).data('delta'));
-                const item = cart.find(c => c.id == id);
-                if (item) {
-                    item.qty += delta;
-                    if (item.qty <= 0) cart = cart.filter(c => c.id != id);
-                    updateCartUI();
-                }
-            });
-
-            $(document).on('click', '.cart-remove', function() {
-                const id = $(this).data('id');
-                cart = cart.filter(c => c.id != id);
-                updateCartUI();
-            });
-
-            updateCartUI();
         });
     </script>
 @endpush

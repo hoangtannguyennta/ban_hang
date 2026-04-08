@@ -3,6 +3,99 @@
     Trang Chủ
 @endsection
 @section('content')
+    <style>
+        .hero-slider { margin-bottom: 50px; }
+        .hero-slide-item { position: relative; height: 80vh; overflow: hidden; }
+        .hero-slide-item img { width: 100%; height: 100%; object-fit: cover; }
+        .hero-slider__copy {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            transform: translateY(-50%);
+            color: #fff;
+            text-align: left;
+        }
+        .hero-slider__copy h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin: 10px 0;
+            line-height: 1;
+        }
+        .hero-slider__copy h1 span {
+            background: none !important;
+            -webkit-text-fill-color: initial !important;
+            color: #fff;
+        }
+        .btn-hero {
+            background: #fff;
+            color: #000;
+            padding: 12px 30px;
+            text-transform: uppercase;
+            font-weight: 700;
+            border-radius: 0;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .filter-chips .chip {
+            border: none;
+            background: transparent;
+            text-transform: uppercase;
+            font-weight: 600;
+            font-size: 13px;
+            padding: 5px 0;
+            margin-right: 25px;
+            border-bottom: 2px solid transparent;
+        }
+        .filter-chips .chip.active {
+            border-bottom: 2px solid #000;
+            background: transparent;
+            color: #000;
+        }
+        .product-card { border: none; transition: all 0.3s ease; }
+        .card-name a { font-weight: 600; text-transform: uppercase; font-size: 14px; color: #000; }
+        .price-sale { font-weight: 500; color: #666; font-size: 13px; }
+        .add-to-cart-btn {
+            background: #000;
+            border-radius: 0;
+            opacity: 0;
+            transition: 0.3s;
+        }
+        .product-card:hover .add-to-cart-btn { opacity: 1; }
+        .badge-sale { border-radius: 0; font-size: 10px; font-weight: 700; padding: 4px 10px; }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .hero-slide-item { height: 60vh; }
+            .hero-slider__copy {
+                top: unset;
+                left: 5%;
+                right: 5%;
+                text-align: center;
+            }
+            .hero-slider__copy h1 {
+                font-size: 2.2rem;
+            }
+            .hero-desc {
+                font-size: 0.9rem;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+            .filters {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            .filter-chips {
+                overflow-x: auto;
+                white-space: nowrap;
+                width: 100%;
+                padding-bottom: 10px;
+            }
+        }
+    </style>
     <!-- Hero Slider -->
     <section class="hero-slider">
         <div class="hero-slider__wrapper">
@@ -14,7 +107,7 @@
                             @if ($slide->subtitle)
                                 <p class="hero-label">{{ $slide->subtitle }}</p>
                             @endif
-                            <h1><span class="text-gold-gradient">{{ $slide->title }}</span></h1>
+                            <h1><span>{{ $slide->title }}</span></h1>
                             <p class="hero-desc">{{ $slide->desc }}</p>
                             <a href="{{ $slide->link ?? '#' }}" class="btn-hero">Khám phá ngay</a>
                         </div>
@@ -69,16 +162,6 @@
                         </button>
                     </div>
                     <div class="card-info">
-                        <div class="stars">
-                            {{-- Render sao tĩnh hoặc logic từ review --}}
-                            @for ($i = 0; $i < 5; $i++)
-                                <svg class="star-icon filled" viewBox="0 0 24 24">
-                                    <polygon
-                                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                                </svg>
-                            @endfor
-                        </div>
-                        <p class="card-brand" style="color: var(--text-muted); font-size: 0.85rem;">Brand Name</p>
                         <h3 class="card-name">
                             <a href="{{ route('fe.product.detail', $product->slug) }}">{{ $product->name }}</a>
                         </h3>
@@ -94,51 +177,9 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            // Khởi tạo giỏ hàng từ localStorage
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-            // Hàm cập nhật giao diện giỏ hàng
-            function updateCartUI() {
-                localStorage.setItem('cart', JSON.stringify(cart));
-
-                // Cập nhật số lượng trên Badge
-                const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
-                $('.cart-badge').text(totalQty);
-
-                // Cập nhật danh sách trong Sidebar
-                const $cartList = $('.cart-items');
-                if ($cartList.length) {
-                    $cartList.empty();
-                    let totalAmount = 0;
-
-                    if (cart.length === 0) {
-                        $cartList.html('<div class="cart-empty">Giỏ hàng của bạn đang trống.</div>');
-                    } else {
-                        cart.forEach(item => {
-                            totalAmount += item.price * item.qty;
-                            $cartList.append(`
-                <div class="cart-item">
-                  <img src="${item.image}" alt="${item.name}">
-                  <div class="cart-item-info">
-                    <div class="cart-item-name">${item.name}</div>
-                    <div class="cart-item-price">${new Intl.NumberFormat('vi-VN').format(item.price)}₫</div>
-                    <div class="cart-item-qty">
-                      <button class="btn-qty" data-id="${item.id}" data-delta="-1">-</button>
-                      <span>${item.qty}</span>
-                      <button class="btn-qty" data-id="${item.id}" data-delta="1">+</button>
-                    </div>
-                    <button class="cart-remove" data-id="${item.id}">Xóa</button>
-                  </div>
-                </div>
-              `);
-                        });
-                    }
-                    $('.total-price').text(new Intl.NumberFormat('vi-VN').format(totalAmount) + '₫');
-                }
-            }
-
             // Xử lý thêm vào giỏ
             $(document).on('click', '.btn-add-to-cart', function() {
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
                 const id = $(this).data('id');
                 const name = $(this).data('name');
                 const price = $(this).data('price');
@@ -148,40 +189,13 @@
                 if (existingItem) {
                     existingItem.qty += 1;
                 } else {
-                    cart.push({
-                        id,
-                        name,
-                        price,
-                        image,
-                        qty: 1
-                    });
+                    cart.push({ id, name, price, image, qty: 1 });
                 }
 
+                localStorage.setItem('cart', JSON.stringify(cart));
                 updateCartUI();
-                $('.cart-sidebar, .cart-overlay').addClass('open'); // Mở sidebar để thông báo
+                toggleCart();
             });
-
-            // Tăng giảm số lượng
-            $(document).on('click', '.btn-qty', function() {
-                const id = $(this).data('id');
-                const delta = parseInt($(this).data('delta'));
-                const item = cart.find(c => c.id == id);
-                if (item) {
-                    item.qty += delta;
-                    if (item.qty <= 0) cart = cart.filter(c => c.id != id);
-                    updateCartUI();
-                }
-            });
-
-            // Xóa sản phẩm
-            $(document).on('click', '.cart-remove', function() {
-                const id = $(this).data('id');
-                cart = cart.filter(c => c.id != id);
-                updateCartUI();
-            });
-
-            // Khởi tạo UI ban đầu
-            updateCartUI();
 
             // Khởi tạo Slick Slider
             $('.banner-slider').slick({

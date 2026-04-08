@@ -6,30 +6,209 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fashion Store — Thời trang & Giày dép hiện đại</title>
     <meta name="description" content="Cập nhật xu hướng thời trang mới nhất, giày dép và quần áo cao cấp." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
     <link rel="stylesheet" type="text/css"
         href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
+    <style>
+        :root {
+            --primary-color: #000000;
+            --text-color: #000000;
+            --light-gray: #f5f5f5;
+            --border-color: #e5e5e5;
+            --font-main: 'Jost', sans-serif;
+        }
+        body {
+            font-family: var(--font-main);
+            color: var(--text-color);
+            letter-spacing: 0.5px;
+        }
+        .top-bar {
+            background: var(--primary-color);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 2px;
+            font-weight: 500;
+            padding: 8px 0;
+        }
+        .site-header {
+            border-bottom: 1px solid #222;
+            background: #000;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 10px 0;
+        }
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .logo {
+            text-decoration: none;
+            color: #fff !important;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 1.8rem !important;
+            justify-self: center;
+            display: flex;
+            align-items: center;
+        }
+        .logo img {
+            max-height: 75px; /* Tăng kích thước từ 50px lên 75px */
+            width: auto;
+            filter: brightness(0) invert(1);
+            image-rendering: -webkit-optimize-contrast; /* Giúp logo sắc nét hơn */
+            image-rendering: crisp-edges;
+        }
+        .nav-links {
+            display: flex;
+        }
+        .nav-links a {
+            text-transform: uppercase;
+            font-weight: 600;
+            font-size: 13px;
+            margin: 0 15px;
+            letter-spacing: 1px;
+            color: #fff;
+            text-decoration: none;
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .cart-btn, .menu-toggle {
+            background: none;
+            border: none;
+            color: #fff;
+            padding: 0;
+            cursor: pointer;
+        }
+        .menu-toggle {
+            display: none;
+        }
+
+        /* Mobile Nav Sidebar */
+        .mobile-nav-sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100%;
+            background: #fff;
+            z-index: 1100;
+            transition: 0.3s;
+            padding: 40px 20px;
+        }
+        .mobile-nav-sidebar.open {
+            left: 0;
+        }
+        .mobile-nav-sidebar a {
+            display: block;
+            color: #000;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        @media (max-width: 991px) {
+            .nav-links {
+                display: none;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .header-inner {
+                grid-template-columns: auto 1fr auto;
+            }
+            .logo {
+                order: 2;
+            }
+            .menu-toggle {
+                order: 1;
+            }
+            .header-actions {
+                order: 3;
+            }
+        }
+        .cart-badge {
+            background: #fff;
+            color: #000;
+        }
+        .site-footer {
+            background: #fff;
+            border-top: 1px solid var(--border-color);
+            padding: 60px 0 30px;
+            text-align: center;
+        }
+        .footer-logo {
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .footer-logo span {
+            background: none !important;
+            -webkit-text-fill-color: initial !important;
+            color: #000;
+        }
+        .footer-links a {
+            color: #666;
+            text-transform: uppercase;
+            font-size: 11px;
+            margin: 0 10px;
+            letter-spacing: 1px;
+        }
+        .btn-checkout {
+            background: #000;
+            border-radius: 0;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+    </style>
     @stack('styles')
 </head>
 
 <body>
 
     <!-- Top Bar -->
-    <div class="top-bar">Miễn phí vận chuyển cho đơn hàng từ 500.000₫</div>
+    <div class="top-bar" style="text-align: center; color: #fff;">Miễn phí vận chuyển cho đơn hàng từ 500.000₫</div>
 
     <!-- Header -->
     <header class="site-header">
-        <div class="container header-inner">
+        <div class="header-inner">
+            <button class="menu-toggle" onclick="toggleMenu()">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+
             <a href="/" class="logo">
-                <span class="text-gold-gradient" style="font-size: 1.5rem;">Nhà Bi</span>
+                <img src="{{ asset('images/logo.png') }}" alt="Logo">
             </a>
+
             <nav class="nav-links">
-                <a href="#">Hàng Mới</a>
-                <a href="#">Nam</a>
-                <a href="#">Nữ</a>
-                <a href="#">Giày Dép</a>
+                <a href="#">Áo quần</a>
+                <a href="#">Giày dép</a>
+                <a href="#">Phong thủy</a>
             </nav>
+
             <div class="header-actions">
                 <button class="cart-btn" onclick="toggleCart()">
                     <svg class="icon" viewBox="0 0 24 24">
@@ -42,6 +221,14 @@
             </div>
         </div>
     </header>
+
+    <!-- Mobile Navigation -->
+    <aside class="mobile-nav-sidebar" id="mobileNav">
+        <a href="#">Áo quần</a>
+        <a href="#">Giày dép</a>
+        <a href="#">Phong thủy</a>
+    </aside>
+    <div class="cart-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
 
     @yield('content')
 
@@ -86,6 +273,81 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script>
+        // Mobile Menu Toggle
+        function toggleMenu() {
+            $('#mobileNav, #menuOverlay').toggleClass('open');
+        }
+
+        // Hàm đóng/mở giỏ hàng
+        function toggleCart() {
+            $('#cartSidebar, #cartOverlay').toggleClass('open');
+        }
+
+        // Hàm cập nhật giao diện giỏ hàng toàn trang
+        function updateCartUI() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            $('#cartCount, .cart-badge').text(totalQty);
+
+            const $cartList = $('#cartItems');
+            if ($cartList.length) {
+                $cartList.empty();
+                let totalAmount = 0;
+
+                if (cart.length === 0) {
+                    $cartList.html('<div class="cart-empty">Giỏ hàng của bạn đang trống.</div>');
+                } else {
+                    cart.forEach(item => {
+                        totalAmount += item.price * item.qty;
+                        $cartList.append(`
+                            <div class="cart-item">
+                                <img src="${item.image}" alt="${item.name}">
+                                <div class="cart-item-info">
+                                    <div class="cart-item-name">${item.name}</div>
+                                    <div class="cart-item-price">${new Intl.NumberFormat('vi-VN').format(item.price)}₫</div>
+                                    <div class="cart-item-qty">
+                                        <button class="btn-qty" data-id="${item.id}" data-delta="-1">-</button>
+                                        <span>${item.qty}</span>
+                                        <button class="btn-qty" data-id="${item.id}" data-delta="1">+</button>
+                                    </div>
+                                    <button class="cart-remove" data-id="${item.id}">Xóa</button>
+                                </div>
+                            </div>
+                        `);
+                    });
+                }
+                $('#cartTotal, .total-price').text(new Intl.NumberFormat('vi-VN').format(totalAmount) + '₫');
+            }
+        }
+
+        $(document).ready(function() {
+            updateCartUI();
+
+            // Xử lý xóa sản phẩm khỏi giỏ hàng
+            $(document).on('click', '.cart-remove', function() {
+                const id = $(this).data('id');
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                cart = cart.filter(item => item.id != id);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartUI();
+            });
+
+            // Xử lý tăng giảm số lượng trong giỏ hàng
+            $(document).on('click', '.btn-qty', function() {
+                const id = $(this).data('id');
+                const delta = parseInt($(this).data('delta'));
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                const item = cart.find(c => c.id == id);
+                if (item) {
+                    item.qty += delta;
+                    if (item.qty <= 0) cart = cart.filter(c => c.id != id);
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    updateCartUI();
+                }
+            });
+        });
+    </script>
     @stack('scripts')
 </body>
 </html>

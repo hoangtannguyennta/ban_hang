@@ -4,8 +4,8 @@
 
 <style>
     :root {
-        --gold: #c8973e;
-        --gold-light: #f1dfad;
+        --primary-black: #000000;
+        --secondary-gray: #757575;
         --bg-input: #f8f9fa;
         --transition: all 0.3s ease-in-out;
     }
@@ -14,10 +14,9 @@
     .checkout-section {
         background: #ffffff;
         border: none;
-        padding: 4rem;
+        padding: 3rem;
         /* Padding rộng để tạo không gian sang trọng */
-        border-radius: 40px;
-        box-shadow: 0 10px 50px rgba(0, 0, 0, 0.04);
+        border: 1px solid #e0e0e0;
     }
 
     .checkout-section h4 {
@@ -61,7 +60,7 @@
     /* Hiệu ứng khi click vào ô: Đường gạch chân chạy màu vàng */
     .form-control:focus {
         background-color: transparent;
-        border-bottom-color: var(--gold);
+        border-bottom-color: var(--primary-black);
         box-shadow: none;
         /* Bỏ đổ bóng xanh mặc định của bootstrap */
         outline: none;
@@ -70,9 +69,9 @@
     /* 3. Label: Nhỏ, thanh mảnh phía trên */
     .form-label {
         font-size: 0.65rem;
-        letter-spacing: 2px;
+        letter-spacing: 1px;
         font-weight: 800;
-        color: #bbb;
+        color: #000;
         margin-bottom: 0.5rem;
         text-transform: uppercase;
     }
@@ -102,19 +101,36 @@
     }
 
     .summary-item {
-        padding: 1.5rem 0;
-        border-bottom: 1px solid #eee;
+        padding: 1rem 0;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .summary-product-img {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border: 1px solid #eee;
+    }
+
+    .summary-product-info {
+        flex: 1;
     }
 
     .summary-product-name {
-        font-size: 1rem;
-        font-weight: 400;
-        color: #666;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #000;
+        display: block;
+        margin-bottom: 4px;
     }
 
     .summary-product-price {
-        font-weight: 600;
+        font-weight: 400;
         color: #1a1a1a;
+        font-size: 0.85rem;
     }
 
     /* 5. Tổng thanh toán: To, rõ, không rườm rà */
@@ -127,8 +143,8 @@
     #checkoutTotal {
         font-weight: 200;
         /* Font mỏng nhưng cực to */
-        font-size: 3rem;
-        color: var(--gold);
+        font-size: 2.5rem;
+        color: var(--primary-black);
         letter-spacing: -2px;
     }
 
@@ -148,12 +164,14 @@
     }
 
     .btn-hero:hover {
-        background: var(--gold);
+        background: #333;
         transform: none;
         /* Không cần bay bổng, chỉ đổi màu */
-        letter-spacing: 5px;
+        letter-spacing: 4px;
         /* Giãn chữ nhẹ khi hover */
     }
+
+    .text-gold-gradient { color: #000 !important; background: none !important; -webkit-text-fill-color: initial !important; font-weight: 700; }
 
     /* Textarea tinh chỉnh */
     textarea.form-control {
@@ -174,7 +192,7 @@
 
 @section('content')
     <main class="container py-5" style="margin-top: 100px;">
-        <div class="text-center mb-5">
+        <div class="text-center" style="margin-bottom: 50px;">
             <h1 class="display-5 font-heading"><span class="text-gold-gradient">Hoàn tất đặt hàng</span></h1>
             <p class="text-muted" style="letter-spacing: 2px; text-transform: uppercase; font-size: 0.75rem;">Vui lòng kiểm
                 tra lại thông tin trước khi xác nhận</p>
@@ -185,7 +203,7 @@
                 <form id="checkoutForm" class="checkout-section shadow-sm">
                     @csrf
                     <h4 class="font-heading mb-4"
-                        style="border-left: 4px solid var(--gold); padding-left: 1rem; font-weight: 700;">Thông tin giao
+                        style="border-left: 4px solid #000; padding-left: 1rem; font-weight: 700;">Thông tin giao
                         hàng</h4>
 
                     <div class="mb-3">
@@ -224,11 +242,11 @@
             <div class="col-lg-5 mt-4 mt-lg-0">
                 <div class="order-summary-card shadow-sm">
                     <div class="summary-header">
-                        <h3>Tóm tắt đơn hàng</h3>
+                        <h3 class="text-uppercase" style="font-size: 1.2rem; font-weight: 700;">Tóm tắt đơn hàng</h3>
                     </div>
-                    <div class="p-4">
+                    <div class="py-2">
                         <div id="checkoutSummary"></div>
-                        <div class="checkout-total-row d-flex justify-content-between align-items-center">
+                        <div class="checkout-total-row d-flex justify-content-between align-items-end">
                             <span class="text-muted text-uppercase fw-bold" style="font-size: 0.8rem;">Tổng thanh
                                 toán</span>
                             <h2 class="text-gold-gradient mb-0" id="checkoutTotal" style="font-weight: 700;">0₫</h2>
@@ -256,8 +274,14 @@
                 cart.forEach(item => {
                     total += item.price * item.qty;
                     $summary.append(`<div class="summary-item">
-                <span class="summary-product-name">${item.name} <strong class="ms-1 text-gold">x${item.qty}</strong></span>
-                <span class="summary-product-price">${new Intl.NumberFormat('vi-VN').format(item.price * item.qty)}₫</span>
+                <img src="${item.image}" alt="${item.name}" class="summary-product-img">
+                <div class="summary-product-info">
+                    <span class="summary-product-name">${item.name}</span>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted small">Số lượng: ${item.qty}</span>
+                        <span class="summary-product-price">${new Intl.NumberFormat('vi-VN').format(item.price * item.qty)}₫</span>
+                    </div>
+                </div>
             </div>`);
                 });
                 $('#checkoutTotal').text(new Intl.NumberFormat('vi-VN').format(total) + '₫');
