@@ -263,7 +263,13 @@
                         </svg>
                         Thêm vào giỏ
                     </button>
-                    <button class="btn-buy-now">Mua ngay</button>
+                    <button class="btn-buy-now" id="btn-buy-now"
+                        data-id="{{ $product->id }}"
+                        data-name="{{ $product->name }}" 
+                        data-price="{{ $product->price }}"
+                        data-image="{{ $product->images ?? asset('img/default.jpg') }}">
+                        Mua ngay
+                    </button>
                 </div>
 
                 <div class="detail-meta">
@@ -365,6 +371,33 @@
                 localStorage.setItem('cart', JSON.stringify(cart));
                 updateCartUI();
                 toggleCart(); // Tự động mở giỏ hàng khi thêm thành công
+            });
+
+            // Xử lý nút Mua ngay: Thêm vào giỏ rồi chuyển hướng
+            $('#btn-buy-now').on('click', function() {
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                const selectedSize = $('.size-option.active').data('size');
+                
+                if (!selectedSize) {
+                    alert('Vui lòng chọn size!');
+                    return;
+                }
+
+                const id = $(this).data('id');
+                const name = $(this).data('name');
+                const price = $(this).data('price');
+                const image = $(this).data('image');
+                const qty = parseInt($('#detailQty').text());
+
+                const existingItem = cart.find(item => item.id == id && item.size == selectedSize);
+                if (existingItem) {
+                    existingItem.qty += qty;
+                } else {
+                    cart.push({ id, name, price, image, qty, size: selectedSize });
+                }
+
+                localStorage.setItem('cart', JSON.stringify(cart));
+                window.location.href = "{{ route('fe.checkout') }}";
             });
 
             // Thêm vào giỏ hàng cho các sản phẩm liên quan
