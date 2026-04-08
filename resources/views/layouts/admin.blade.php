@@ -61,6 +61,14 @@
             box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
             border-radius: 0.75rem;
         }
+        /* Fix pagination SVG icons */
+        .pagination svg {
+            width: 1em;
+            height: 1em;
+        }
+        .pagination .flex.justify-between.flex-1 {
+            display: none; /* Ẩn dòng "Showing X to Y" nếu nó làm rối giao diện admin */
+        }
     </style>
     @stack('styles')
 </head>
