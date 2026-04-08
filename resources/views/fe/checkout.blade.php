@@ -303,12 +303,12 @@
             <div class="summary-item">
                 <img src="${item.image}" alt="${item.name}" class="summary-product-img">
                 <div class="summary-product-info">
-                    <span class="summary-product-name">${item.name} <small class="text-muted">(Size: ${item.size})</small></span>
+                    <span class="summary-product-name">${item.name} ${item.size ? `<small class="text-muted">(Size: ${item.size})</small>` : ''}</span>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="summary-qty-selector">
-                            <button type="button" class="summary-qty-btn btn-minus" data-id="${item.id}">−</button>
+                            <button type="button" class="summary-qty-btn btn-minus" data-id="${item.id}" data-size="${item.size || ''}">−</button>
                             <span class="summary-qty-value">${item.qty}</span>
-                            <button type="button" class="summary-qty-btn btn-plus" data-id="${item.id}">+</button>
+                            <button type="button" class="summary-qty-btn btn-plus" data-id="${item.id}" data-size="${item.size || ''}">+</button>
                         </div>
                         <span class="summary-product-price">${new Intl.NumberFormat('vi-VN').format(item.price * item.qty)}₫</span>
                     </div>
@@ -323,7 +323,7 @@
                     id: item.id,      // ID của sản phẩm trong database
                     qty: item.qty,    // Số lượng
                     price: item.price, // Giá tại thời điểm đặt
-                    size: item.size   // Size đã chọn
+                    size: item.size || null   // Đảm bảo size luôn tồn tại (null thay vì undefined)
                 }));
                 
                 $('#cartDataInput').val(JSON.stringify(formattedCart));
@@ -334,8 +334,9 @@
             // Xử lý thay đổi số lượng trong tóm tắt đơn hàng
             $(document).on('click', '.summary-qty-btn', function() {
                 const id = $(this).data('id');
+                const size = $(this).data('size') || null;
                 const isPlus = $(this).hasClass('btn-plus');
-                const index = cart.findIndex(item => item.id == id);
+                const index = cart.findIndex(item => item.id == id && (item.size == size || (!item.size && !size)));
 
                 if (index !== -1) {
                     if (isPlus) {

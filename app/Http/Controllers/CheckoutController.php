@@ -49,6 +49,7 @@ class CheckoutController extends Controller
                     'product_id' => $product->id,
                     'quantity' => $item['qty'],
                     'price' => $product->price,
+                    'size' => $item['size'] ?? null,
                 ]);
 
                 $totalAmount += $product->price * $item['qty'];

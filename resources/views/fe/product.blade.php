@@ -375,11 +375,11 @@
                 const price = $(this).data('price');
                 const image = $(this).data('image');
 
-                const existingItem = cart.find(item => item.id == id);
+                const existingItem = cart.find(item => item.id == id && !item.size);
                 if (existingItem) {
                     existingItem.qty += 1;
                 } else {
-                    cart.push({ id, name, price, image, qty: 1 });
+                    cart.push({ id, name, price, image, qty: 1, size: null });
                 }
 
                 localStorage.setItem('cart', JSON.stringify(cart));
