@@ -13,6 +13,7 @@
                         <th>ID</th>
                         <th>Khách hàng</th>
                         <th>Kích cỡ</th>
+                        <th>Phương thức thanh toán</th>
                         <th>Tổng tiền</th>
                         <th>Trạng thái</th>
                         <th>Ngày đặt</th>
@@ -29,6 +30,11 @@
                         </td>
                         <td>
                             <span class="badge bg-light text-dark border">{{ $order->items->pluck('size')->filter()->unique()->implode(', ') ?: 'N/A' }}</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-primary text-white">
+                                {{ $order->payment_method == 'cod' ? 'Tiền mặt' : ($order->payment_method == 'transfer' ? 'Chuyển khoản' : ucfirst($order->payment_method)) }}
+                            </span>
                         </td>
                         <td class="text-primary fw-bold">{{ number_format($order->total_amount) }} ₫</td>
                         <td>

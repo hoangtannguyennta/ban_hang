@@ -196,6 +196,15 @@
         letter-spacing: 4px;
         /* Giãn chữ nhẹ khi hover */
     }
+    
+    .payment-method-box {
+        border: 1px solid #eee;
+        padding: 1rem;
+        transition: var(--transition);
+        cursor: pointer;
+    }
+    .payment-method-box:hover { border-color: #000; }
+    .payment-method-box input { accent-color: #000; }
 
     .text-gold-gradient { color: #000 !important; background: none !important; -webkit-text-fill-color: initial !important; font-weight: 700; }
 
@@ -250,7 +259,7 @@
                         </div>
                     </div>
 
-                    <div class="mb-4">
+                    <div class="mb-5">
                         <label class="form-label">Địa chỉ nhận hàng</label>
                         <div class="input-group-custom">
                             <i class="fas fa-map-marker-alt" style="top: 1.2rem; transform: none;"></i>
@@ -258,6 +267,33 @@
                                 placeholder="Địa chỉ cụ thể (Số nhà, đường, phường/xã...)" required></textarea>
                         </div>
                     </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Phương thức thanh toán</label>
+                        <div class="d-flex gap-3 mt-2">
+                            <div class="payment-method-box flex-fill">
+                                <input type="radio" name="payment_method" id="pay_cod" value="cod" checked>
+                                <label for="pay_cod" class="ms-2 mb-0" style="font-size: 0.9rem; cursor: pointer;">Tiền mặt (COD)</label>
+                            </div>
+                            <div class="payment-method-box flex-fill">
+                                <input type="radio" name="payment_method" id="pay_transfer" value="transfer">
+                                <label for="pay_transfer" class="ms-2 mb-0" style="font-size: 0.9rem; cursor: pointer;">Chuyển khoản</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if($activeQr)
+                        <div id="qr_section" class="text-center" style=" display: none; border: 1px solid #eee; background: #fafafa; margin-bottom: auto; padding: 1rem">
+                            <p class="small text-muted mb-3" style="letter-spacing: 1px;">QUÉT MÃ QR ĐỂ THANH TOÁN</p>
+                            {{-- Sử dụng API VietQR để tạo mã QR động --}}
+                            <img src="{{ $activeQr->images }}" alt="QR Code" class="img-fluid mb-3" style="max-width: 180px; border: 5px solid #fff;">
+                            <div class="text-start mx-auto" style="max-width: 280px; font-size: 0.8rem; line-height: 1.6;">
+                                <p style="margin-bottom: 0.5rem;" class="mb-1"><strong>Ngân hàng:</strong> {{ $activeQr->bank_name }}</p>
+                                <p style="margin-bottom: 0.5rem;" class="mb-1"><strong>Số TK:</strong> {{ $activeQr->account_number }}</p>
+                                <p style="margin-bottom: 0;" class="mb-0"><strong>Chủ TK:</strong> {{ $activeQr->account_owner }}</p>
+                            </div>
+                        </div>
+                    @endif
 
                     <input type="hidden" name="cart_data" id="cartDataInput">
                     <button type="submit" id="btnSubmit" class="btn-hero w-100 py-3" style="border:none;">
@@ -347,6 +383,15 @@
                     localStorage.setItem('cart', JSON.stringify(cart));
                     renderSummary();
                     if (typeof updateCartUI === 'function') updateCartUI();
+                }
+            });
+
+            // Hiển thị/ẩn mã QR dựa trên lựa chọn
+            $('input[name="payment_method"]').on('change', function() {
+                if (this.value === 'transfer') {
+                    $('#qr_section').slideDown();
+                } else {
+                    $('#qr_section').slideUp();
                 }
             });
 

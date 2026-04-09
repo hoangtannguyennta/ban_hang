@@ -100,6 +100,12 @@
                     <span class="fw-bold">{{ $order->phone_number }}</span>
                 </div>
                 <div class="mb-3">
+                    <label class="small text-muted d-block">Phương thức thanh toán</label>
+                    <span class="badge bg-primary text-white">
+                        {{ $order->payment_method == 'cod' ? 'Tiền mặt' : ($order->payment_method == 'transfer' ? 'Chuyển khoản' : ucfirst($order->payment_method)) }}
+                    </span>
+                </div>
+                <div class="mb-3">
                     <label class="small text-muted d-block">Địa chỉ giao hàng</label>
                     <span>{{ $order->shipping_address }}</span>
                 </div>

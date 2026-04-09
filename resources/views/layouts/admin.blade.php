@@ -110,6 +110,11 @@
                         <i class="fa-solid fa-image"></i> Quản lý Slide
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('admin.qr_codes.index') }}" class="nav-link {{ request()->routeIs('admin.qr_codes.*') ? 'active' : '' }}">
+                        <i class="fa-solid fa-qrcode"></i> Quản lý QR Code
+                    </a>    
+                </li>
             </ul>
         </aside>
 

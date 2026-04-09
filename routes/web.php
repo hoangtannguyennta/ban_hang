@@ -8,6 +8,7 @@ use App\Http\Controllers\AdminSlideController;
 use App\Http\Controllers\OrderManagementController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminQrCodeController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File; // Thêm dòng này ở đầu file web.php
 use App\Http\Controllers\CheckoutController;
@@ -78,4 +79,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     // Quản lý Slide
     Route::resource('slides', AdminSlideController::class);
+
+    // Quản lý QR Code
+    Route::resource('qr_codes', AdminQrCodeController::class);
 });

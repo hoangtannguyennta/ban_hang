@@ -15,6 +15,7 @@ class OrderSeeder extends Seeder
         $users = User::where('role', 'user')->get();
         $products = Product::all();
         $statuses = ['pending', 'processing', 'completed', 'cancelled'];
+        $methods = ['cod', 'transfer'];
 
         foreach ($users as $user) {
             // Mỗi user tạo 1-2 đơn hàng
@@ -23,6 +24,7 @@ class OrderSeeder extends Seeder
                     'name' => $user->name,
                     'total_amount' => 0, // Sẽ tính toán lại sau khi thêm item
                     'status' => $statuses[array_rand($statuses)],
+                    'payment_method' => $methods[array_rand($methods)],
                     'shipping_address' => 'Số ' . rand(1, 100) . ' Đường ABC, Quận XYZ, TP.HCM',
                     'phone_number' => '090' . rand(1000000, 9999999),
                 ]);
