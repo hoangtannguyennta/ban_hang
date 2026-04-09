@@ -128,7 +128,7 @@
                     </button>
                     <h4 class="mb-0">@yield('page_title', 'Dashboard')</h4>
                     <div class="ms-auto">
-                        <form action="#" method="POST">
+                        <form action="{{ route('logout') }}" method="POST">
                             @csrf
                             <button type="submit" class="btn btn-outline-danger btn-sm">
                                 <i class="fa-solid fa-right-from-bracket me-1"></i> Đăng xuất

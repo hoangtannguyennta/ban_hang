@@ -12,6 +12,7 @@ use App\Http\Controllers\AdminQrCodeController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File; // Thêm dòng này ở đầu file web.php
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\LoginController;
 
 Route::get('/init-db', function () {
     try {
@@ -56,12 +57,17 @@ Route::get('/checkout', [CheckoutController::class, 'index'])->name('fe.checkout
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('fe.checkout.store');
 Route::get('/thank-you/{order}', [CheckoutController::class, 'success'])->name('fe.checkout.success');
 
+// Login Routes
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
 /**
  * Admin Routes
  * Các route này được bảo vệ bởi middleware 'auth' (đã đăng nhập) 
  * và 'admin' (kiểm tra quyền quản trị viên).
  */
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     // Trang chủ Admin
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 

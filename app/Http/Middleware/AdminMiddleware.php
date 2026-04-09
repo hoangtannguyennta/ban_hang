@@ -9,21 +9,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AdminMiddleware
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->isAdmin()) {
+        if (Auth::check() && Auth::user()->role === 'admin') {
             return $next($request);
         }
 
-        // Redirect or abort if not an admin
-        // For example, redirect to home with an error message
-        return redirect('/')->with('error', 'Bạn không có quyền truy cập trang quản trị.');
-        // Or abort with 403 Forbidden
-        // abort(403, 'Unauthorized action.');
+        return redirect('/')->with('error', 'Bạn không có quyền truy cập trang này.');
     }
 }
