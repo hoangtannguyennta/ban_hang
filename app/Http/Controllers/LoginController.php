@@ -24,7 +24,7 @@ class LoginController extends Controller
 
             // Kiểm tra nếu là admin thì vào trang quản trị, ngược lại về trang chủ
             if (Auth::user()->role === 'admin') {
-                return redirect()->intended(route('admin.users')); // Chuyển hướng admin về trang quản lý người dùng
+                return redirect()->intended(route('admin.users.index')); // Chuyển hướng admin về trang quản lý người dùng
             }
 
             return redirect()->intended(route('admin.orders')); // Chuyển hướng người dùng thường về trang đơn hàng của họ
