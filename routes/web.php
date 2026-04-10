@@ -8,10 +8,12 @@ use App\Http\Controllers\AdminSlideController;
 use App\Http\Controllers\OrderManagementController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminCategoryController;
 use App\Http\Controllers\AdminQrCodeController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File; // Thêm dòng này ở đầu file web.php
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
 
 Route::get('/init-db', function () {
@@ -51,6 +53,7 @@ Route::get('/init-db', function () {
  */
 Route::get('/', [ProductController::class, 'index'])->name('fe.home');
 Route::get('/san-pham/{slug}', [ProductController::class, 'show'])->name('fe.product.detail');
+Route::get('/categories', [HomeController::class, 'index'])->name('fe.category.home');
 
 // Checkout Routes
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('fe.checkout');
@@ -88,4 +91,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Quản lý QR Code
     Route::resource('qr_codes', AdminQrCodeController::class);
+
+    // Quản lý Danh mục
+    Route::resource('categories', AdminCategoryController::class);
 });

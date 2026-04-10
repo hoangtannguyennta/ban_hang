@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\Slide;
 use Illuminate\Http\Request;
@@ -13,7 +14,9 @@ class ProductController extends Controller
         // Lấy tất cả sản phẩm, bạn có thể thêm paginate nếu muốn
         $products = Product::latest()->get();
         $slides = Slide::where('is_active', true)->orderBy('order')->get();
-        return view('fe.index', compact('products', 'slides'));
+        $categories = Category::latest()->take(5)->get();
+
+        return view('fe.index', compact('products', 'slides', 'categories'));
     }
 
     public function show($slug)

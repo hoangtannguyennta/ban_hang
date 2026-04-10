@@ -204,9 +204,11 @@
             </a>
 
             <nav class="nav-links">
-                <a href="#">Áo quần</a>
-                <a href="#">Giày dép</a>
-                <a href="#">Phong thủy</a>
+                @foreach($categories as $category)
+                    {{-- Bạn có thể thay đổi href="#" thành route thực tế của trang danh mục sản phẩm sau này --}}
+                    {{-- Ví dụ: <a href="{{ route('fe.products.by_category', $category->slug) }}"> --}}
+                    <a href="#">{{ $category->name }}</a>
+                @endforeach
             </nav>
 
             <div class="header-actions">
@@ -224,9 +226,10 @@
 
     <!-- Mobile Navigation -->
     <aside class="mobile-nav-sidebar" id="mobileNav">
-        <a href="#">Áo quần</a>
-        <a href="#">Giày dép</a>
-        <a href="#">Phong thủy</a>
+        @foreach($categories as $category)
+            {{-- Tương tự, thay đổi href="#" nếu có trang danh mục cụ thể --}}
+            <a href="#">{{ $category->name }}</a>
+        @endforeach
     </aside>
     <div class="cart-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
 

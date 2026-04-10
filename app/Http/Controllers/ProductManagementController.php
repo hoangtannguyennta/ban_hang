@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -66,13 +67,14 @@ class ProductManagementController extends Controller
 
     public function index()
     {
-        $products = Product::latest()->paginate(10);
+        $products = Product::with('category')->latest()->paginate(10);
         return view('products.index', compact('products'));
     }
 
     public function create()
     {
-        return view('products.create');
+        $categories = Category::all();
+        return view('products.create', compact('categories'));
     }
 
     public function store(Request $request)
@@ -84,6 +86,7 @@ class ProductManagementController extends Controller
             'stock' => 'required|integer|min:0',
             'images' => 'nullable|image',
             'sizes' => 'nullable|string',
+            'category_id' => 'nullable|exists:categories,id',
         ]);
 
         $validated['slug'] = Str::slug($request->name);
@@ -111,7 +114,8 @@ class ProductManagementController extends Controller
 
     public function edit(Product $product)
     {
-        return view('products.edit', compact('product'));
+        $categories = Category::all();
+        return view('products.edit', compact('product', 'categories'));
     }
 
     public function update(Request $request, Product $product)
@@ -123,6 +127,7 @@ class ProductManagementController extends Controller
             'stock' => 'required|integer|min:0',
             'images' => 'nullable|image',
             'sizes' => 'nullable|string',
+            'category_id' => 'nullable|exists:categories,id',
         ]);
 
         $validated['slug'] = Str::slug($request->name);

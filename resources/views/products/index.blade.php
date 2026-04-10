@@ -39,6 +39,7 @@
                                 </td>
                                 <td>
                                     <div class="fw-bold">{{ $product->name }}</div>
+                                    <div class="text-muted">{{ $product->category ? $product->category->name : 'N/A' }}</div>
                                     <small class="text-muted">{{ $product->slug }}</small>
                                 </td>
                                 <td class="text-primary fw-semibold">{{ number_format($product->price) }} VNĐ</td>

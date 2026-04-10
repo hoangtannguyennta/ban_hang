@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 use Faker\Factory as Faker;
@@ -12,6 +13,7 @@ class ProductSeeder extends Seeder
     public function run(): void
     {
         $faker = Faker::create();
+        $categoryIds = Category::pluck('id')->toArray();
 
         $products = [
             ['name' => 'Nike Air Force 1 \'07', 'price' => 2500000, 'stock' => 50, 'sizes' => ['38', '39', '40', '41', '42']],
@@ -45,6 +47,7 @@ class ProductSeeder extends Seeder
                 'stock' => $item['stock'],
                 'sizes' => $item['sizes'],
                 'images' => $fashionImages[$key] ?? $faker->imageUrl(640, 480, 'fashion'),
+                'category_id' => !empty($categoryIds) ? $categoryIds[array_rand($categoryIds)] : null,
             ]);
         }
     }

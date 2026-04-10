@@ -115,6 +115,11 @@
                         <i class="fa-solid fa-qrcode"></i> Quản lý QR Code
                     </a>    
                 </li>
+                <li>
+                    <a href="{{ route('admin.categories.index') }}" class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+                        <i class="fa-solid fa-layer-group"></i> Quản lý Danh mục
+                    </a>
+                </li>
             </ul>
         </aside>
 
