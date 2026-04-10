@@ -24,6 +24,7 @@ class ProductController extends Controller
         $product = Product::where('slug', $slug)->firstOrFail();
         // Lấy sản phẩm liên quan (cùng danh mục hoặc ngẫu nhiên)
         $relatedProducts = Product::where('id', '!=', $product->id)->limit(4)->get();
-        return view('fe.product', compact('product', 'relatedProducts'));
+        $categories = Category::latest()->take(5)->get();
+        return view('fe.product', compact('product', 'relatedProducts', 'categories'));
     }
 }
