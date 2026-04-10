@@ -296,7 +296,7 @@ ul {
 .hero-desc {
   font-size: 0.95rem;
   margin-bottom: 1.5rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: #fff; /* Chuyển sang màu trắng hoàn toàn */
   line-height: 1.6;
   display: -webkit-box;
   -webkit-line-clamp: 2;

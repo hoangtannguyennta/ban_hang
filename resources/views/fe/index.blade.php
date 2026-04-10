@@ -5,13 +5,11 @@
 @section('content')
     <style>
         .hero-slider { margin-bottom: 50px; }
-        .hero-slide-item { position: relative; height: 80vh; overflow: hidden; }
-        .hero-slide-item img { width: 100%; height: 100%; object-fit: cover; }
+        .hero-slide-item { position: relative; height: 80vh; overflow: hidden; display: flex; align-items: center; }
+        .hero-slide-item img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
         .hero-slider__copy {
-            position: absolute;
-            top: 50%;
-            left: 10%;
-            transform: translateY(-50%);
+            position: relative;
+            z-index: 10; /* Tăng z-index để nổi lên trên lớp phủ overlay */
             color: #fff;
             text-align: left;
         }
@@ -20,6 +18,7 @@
             font-weight: 800;
             text-transform: uppercase;
             margin: 10px 0;
+            text-shadow: 0 0 10px rgba(0,0,0,0.5); /* Thêm đổ bóng cho tiêu đề chính */
             line-height: 1;
         }
         .hero-slider__copy h1 span {
@@ -36,6 +35,14 @@
             border-radius: 0;
             display: inline-block;
             margin-top: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        .btn-hero:hover {
+            background: #000;
+            color: #fff;
+            transform: translateY(-3px);
         }
         .filter-chips .chip {
             border: none;
@@ -68,9 +75,6 @@
         @media (max-width: 768px) {
             .hero-slide-item { height: 60vh; }
             .hero-slider__copy {
-                top: unset;
-                left: 5%;
-                right: 5%;
                 text-align: center;
             }
             .hero-slider__copy h1 {
