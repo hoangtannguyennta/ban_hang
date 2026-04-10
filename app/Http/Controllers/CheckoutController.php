@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
@@ -13,7 +14,8 @@ class CheckoutController extends Controller
     public function index()
     {
         $activeQr = QrCode::where('is_active', true)->first();
-        return view('fe.checkout', compact('activeQr'));
+        $categories = Category::latest()->take(5)->get();
+        return view('fe.checkout', compact('activeQr', 'categories'));
     }
 
     public function store(Request $request)
@@ -68,6 +70,7 @@ class CheckoutController extends Controller
 
     public function success(Order $order)
     {
-        return view('fe.thankyou', compact('order'));
+        $categories = Category::latest()->take(5)->get();
+        return view('fe.thankyou', compact('order', 'categories'));
     }
 }
