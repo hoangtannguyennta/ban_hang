@@ -65,9 +65,21 @@ class ProductManagementController extends Controller
         }
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('category')->latest()->paginate(10);
+        $query = Product::with('category');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('name', 'like', "%$search%");
+        }
+
+        // Sắp xếp mặc định cho admin là mới nhất
+        if (!$request->has('sort')) {
+            $query->latest();
+        }
+
+        $products = $query->paginate(10);
         return view('products.index', compact('products'));
     }
 

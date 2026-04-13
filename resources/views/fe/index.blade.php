@@ -71,6 +71,37 @@
         .product-card:hover .add-to-cart-btn { opacity: 1; }
         .badge-sale { border-radius: 0; font-size: 10px; font-weight: 700; padding: 4px 10px; }
 
+        /* Search Box & View All Button */
+        .search-box { position: relative; }
+        .search-box input {
+            border: none;
+            border-bottom: 2px solid #eee;
+            border-radius: 0;
+            padding: 8px 35px 8px 0;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            width: 200px;
+            background: transparent;
+        }
+        .search-box input:focus {
+            outline: none;
+            border-bottom-color: #000;
+            box-shadow: none;
+        }
+        .search-box i { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); color: #757575; }
+
+        .btn-view-all {
+            display: inline-block;
+            padding: 12px 40px;
+            border: 2px solid #000;
+            color: #000;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+        .btn-view-all:hover { background: #000; color: #fff; }
+
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
             .hero-slide-item { height: 60vh; }
@@ -124,20 +155,36 @@
     <!-- Main -->
     <main class="container">
         <!-- Filters -->
-        <div class="filters">
-            <div class="filter-chips">
-                <button class="chip active" onclick="filterBrand('')">Tất cả</button>
-                <button class="chip" onclick="filterBrand('Nike')">Nike</button>
-                <button class="chip" onclick="filterBrand('Adidas')">Adidas</button>
-                <button class="chip" onclick="filterBrand('Uniqlo')">Uniqlo</button>
+        <div class="filters d-flex justify-content-between align-items-center flex-wrap mb-4">
+            <div class="filter-chips d-flex align-items-center">
+                <a href="{{ route('fe.home', request()->except(['category', 'page'])) }}" 
+                   class="chip {{ !request('category') ? 'active' : '' }}" style="text-decoration: none; color: inherit;">Tất cả</a>
+                @foreach($categories as $cat)
+                    <a href="{{ route('fe.home', array_merge(request()->query(), ['category' => $cat->id])) }}" 
+                       class="chip {{ request('category') == $cat->id ? 'active' : '' }}" style="text-decoration: none; color: inherit;">
+                        {{ $cat->name }}
+                    </a>
+                @endforeach
             </div>
-            <select class="sort-select" onchange="sortProducts(this.value)">
-                <option value="featured">Nổi bật</option>
-                <option value="price-asc">Giá thấp đến cao</option>
-                <option value="price-desc">Giá cao đến thấp</option>
-                <option value="name-asc">Tên: A → Z</option>
-            </select>
-            <p class="product-count" id="productCount">8 sản phẩm</p>
+            
+            <div class="d-flex align-items-center gap-4 flex-wrap mt-3 mt-md-0">
+                <form action="{{ route('fe.home') }}" method="GET" class="search-box">
+                    @if(request('category')) <input type="hidden" name="category" value="{{ request('category') }}"> @endif
+                    @if(request('sort')) <input type="hidden" name="sort" value="{{ request('sort') }}"> @endif
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Tìm kiếm sản phẩm...">
+                    <button type="submit" style="background:none; border:none; position: absolute; right: 5px; top: 50%; transform: translateY(-50%); color: #757575;">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+
+                <select class="sort-select" onchange="applySort(this.value)">
+                    <option value="featured" {{ request('sort') == 'featured' ? 'selected' : '' }}>Nổi bật</option>
+                    <option value="price-asc" {{ request('sort') == 'price-asc' ? 'selected' : '' }}>Giá thấp đến cao</option>
+                    <option value="price-desc" {{ request('sort') == 'price-desc' ? 'selected' : '' }}>Giá cao đến thấp</option>
+                    <option value="name-asc" {{ request('sort') == 'name-asc' ? 'selected' : '' }}>Tên: A → Z</option>
+                </select>
+                <p class="product-count mb-0" id="productCount">{{ $products->total() }} sản phẩm</p>
+            </div>
         </div>
         
         <!-- Product Grid -->
@@ -176,10 +223,28 @@
                 </article>
             @endforeach
         </div>
+
+        <!-- Pagination -->
+        <div class="d-flex justify-content-center mt-5">
+            {{ $products->links() }}
+        </div>
+
+        <!-- View All / Reset Button -->
+        <div class="text-center mt-4 mb-5">
+            <a href="{{ route('fe.products.all') }}" class="btn-view-all">Xem tất cả sản phẩm</a>
+        </div>
     </main>
 @endsection
 @push('scripts')
     <script>
+        function applySort(sortValue) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('sort', sortValue);
+            // Reset trang về 1 khi đổi cách sắp xếp (nếu có phân trang)
+            if (url.searchParams.has('page')) url.searchParams.delete('page');
+            window.location.href = url.toString();
+        }
+
         $(document).ready(function() {
             // Xử lý thêm vào giỏ
             $(document).on('click', '.btn-add-to-cart', function() {

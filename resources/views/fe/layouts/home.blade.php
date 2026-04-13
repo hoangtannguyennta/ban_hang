@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fashion Store — Thời trang & Giày dép hiện đại</title>
+    <title>Nhà Bi Store — Thời trang & Giày dép hiện đại</title>
     <meta name="description" content="Cập nhật xu hướng thời trang mới nhất, giày dép và quần áo cao cấp." />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css"
         href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
+    <link rel="stylesheet" href="{{ asset('bootraps/css/bootstrap.min.css') }}">
     <style>
         :root {
             --primary-color: #000000;
@@ -199,15 +200,13 @@
                 </svg>
             </button>
 
-            <a href="/" class="logo">
+            <a href="{{ route('fe.home') }}" class="logo">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo">
             </a>
 
             <nav class="nav-links">
                 @foreach($categories as $category)
-                    {{-- Bạn có thể thay đổi href="#" thành route thực tế của trang danh mục sản phẩm sau này --}}
-                    {{-- Ví dụ: <a href="{{ route('fe.products.by_category', $category->slug) }}"> --}}
-                    <a href="#">{{ $category->name }}</a>
+                    <a href="{{ route('fe.category', $category->id) }}">{{ $category->name }}</a>
                 @endforeach
             </nav>
 
@@ -227,8 +226,7 @@
     <!-- Mobile Navigation -->
     <aside class="mobile-nav-sidebar" id="mobileNav">
         @foreach($categories as $category)
-            {{-- Tương tự, thay đổi href="#" nếu có trang danh mục cụ thể --}}
-            <a href="#">{{ $category->name }}</a>
+            <a href="{{ route('fe.category', $category->id) }}">{{ $category->name }}</a>
         @endforeach
     </aside>
     <div class="cart-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
@@ -274,6 +272,7 @@
         </div>
     </aside>
 
+    <script src="{{ asset('bootraps/js/bootstrap.bundle.min.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script>

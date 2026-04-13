@@ -54,6 +54,8 @@ Route::get('/init-db', function () {
 Route::get('/', [ProductController::class, 'index'])->name('fe.home');
 Route::get('/san-pham/{slug}', [ProductController::class, 'show'])->name('fe.product.detail');
 Route::get('/categories', [HomeController::class, 'index'])->name('fe.category.home');
+Route::get('/danh-muc/{id}', [ProductController::class, 'category'])->name('fe.category');
+Route::get('/tat-ca-san-pham', [ProductController::class, 'allProducts'])->name('fe.products.all');
 
 // Checkout Routes
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('fe.checkout');

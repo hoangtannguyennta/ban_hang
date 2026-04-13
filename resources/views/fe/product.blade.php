@@ -216,7 +216,7 @@
             </div>
 
             <div class="detail-info">
-                <p class="detail-brand">Fashion Store</p>
+                <p class="detail-brand">Nhà Bi Store</p>
                 <h1 class="detail-name">{{ $product->name }}</h1>
 
                 <div class="detail-stars">
@@ -290,7 +290,7 @@
                         <a href="{{ route('fe.product.detail', $item->slug) }}">
                             <img src="{{ $item->images ?? asset('img/default.jpg') }}" alt="{{ $item->name }}" loading="lazy" />
                         </a>
-                        <button class="add-to-cart-btn btn-add-to-cart" style="margin-bottom: 15px"
+                        <button class="add-to-cart-btn btn-add-to-cart w-50" style="margin-bottom: 15px; left: 25%;"
                             data-id="{{ $item->id }}"
                             data-name="{{ $item->name }}" 
                             data-price="{{ $item->price }}"
