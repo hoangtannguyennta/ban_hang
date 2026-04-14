@@ -77,7 +77,7 @@
         <!-- Sidebar -->
         <aside id="sidebar" class="flex-shrink-0 p-3">
             <a href="/" class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom justify-content-center">
-                <span class="fs-5 fw-bold text-dark"></i><img src="{{ asset('images/logo.png') }}" alt="Logo" class="img-fluid" style="max-height: 60px;"></span>
+                <span class="fs-5 fw-bold text-dark"></i><img src="{{ asset('images/logo debaek-04.png') }}" alt="Logo" class="img-fluid" style="max-height: 60px; width: 150px; object-fit: cover;"></span>
             </a>
             <ul class="nav nav-pills flex-column mb-auto">
                 {{-- <li class="nav-item">

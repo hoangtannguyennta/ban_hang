@@ -62,13 +62,6 @@
             display: flex;
             align-items: center;
         }
-        .logo img {
-            max-height: 75px; /* Tăng kích thước từ 50px lên 75px */
-            width: auto;
-            filter: brightness(0) invert(1);
-            image-rendering: -webkit-optimize-contrast; /* Giúp logo sắc nét hơn */
-            image-rendering: crisp-edges;
-        }
         .nav-links {
             display: flex;
         }
@@ -201,7 +194,7 @@
             </button>
 
             <a href="{{ route('fe.home') }}" class="logo">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo">
+                <img src="{{ asset('images/logo debaek-05.png') }}" alt="Logo">
             </a>
 
             <nav class="nav-links">
