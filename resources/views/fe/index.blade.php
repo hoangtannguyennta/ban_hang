@@ -12,49 +12,43 @@
         /* --- Minimalist Filters Custom --- */
         .filters {
             margin-bottom: 50px !important;
-            padding: 10px 0;
+            padding: 20px 0;
+            border-top: 1px solid #f5f5f5;
+            border-bottom: 1px solid #f5f5f5;
         }
-        .filter-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #aaa;
-            font-weight: 800;
-            margin-right: 20px;
-        }
-        .filter-chips .chip {
+        .filter-link {
             display: inline-block;
-            background: #f8f8f8;
             color: #888;
-            padding: 8px 18px;
-            margin-right: 8px;
-            border-radius: 50px;
-            font-size: 10px;
+            padding: 8px 20px;
+            margin-right: 10px;
+            font-size: 11px;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             text-decoration: none;
             transition: all 0.3s ease;
-            border: 1px solid #eee;
+            border: 1px solid transparent;
         }
-        .filter-chips .chip.active {
-            background: #000;
-            color: #fff;
-            border-color: #000;
-            font-weight: 700;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        .filter-chips .chip:hover:not(.active) {
-            background: #fff;
+        .filter-link.active {
             color: #000;
-            border-color: #000;
+            border: 1px solid #000;
+            font-weight: 700;
         }
-
+        .filter-link:hover:not(.active) {
+            color: #000;
+        }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
         /* --- Modern Product Grid --- */
         .product-card {
             border: none;
             background: transparent;
             transition: var(--transition-smooth);
+            padding-bottom: 10px;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
         }
         .card-image {
             position: relative;
@@ -62,6 +56,7 @@
             background: #fcfcfc;
             aspect-ratio: 3/4;
             width: 100%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.02);
         }
         .card-image img {
             width: 100%;
@@ -69,6 +64,10 @@
             object-fit: cover;
             transition: opacity 0.5s ease;
             backface-visibility: hidden;
+        }
+        .product-card:hover .main-img {
+            transform: scale(1.05);
+            transition: transform 0.8s ease;
         }
         .card-image .hover-img {
             position: absolute;
@@ -105,7 +104,7 @@
         }
         .search-box input {
             border: none;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #eee;
             border-radius: 0;
             padding: 8px 30px 8px 0;
             font-size: 11px;
@@ -130,6 +129,12 @@
             cursor: pointer;
             color: #000;
             outline: none;
+            padding: 5px 0;
+            border-bottom: 1px solid transparent;
+            transition: border-bottom-color 0.3s;
+        }
+        .sort-select:hover {
+            border-bottom-color: #000;
         }
 
         /* --- Hover Actions Style --- */
@@ -263,6 +268,51 @@
             color: #fff;
         }
 
+        /* --- Hot Collection Section --- */
+        .collection-section {
+            padding: 100px 0;
+            background: #fff;
+        }
+        .collection-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .collection-header h2 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+        .collection-header p {
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #888;
+        }
+        .collection-card {
+            position: relative;
+            margin-bottom: 30px;
+            transition: var(--transition-smooth);
+        }
+        .collection-card:hover {
+            transform: scale(1.02);
+        }
+        .collection-card img {
+            width: 100%;
+            aspect-ratio: 4/5;
+            object-fit: cover;
+        }
+
+        /* --- Newsletter Section --- */
+        .newsletter-section {
+            background: #000;
+            color: #fff;
+            padding: 80px 0;
+            text-align: center;
+            margin-top: 80px;
+        }
+
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
             .hero-slide-item {
@@ -293,7 +343,7 @@
                 align-items: flex-start;
                 margin-bottom: 30px !important;
             }
-            .filter-chips {
+            .filter-links {
                 overflow-x: auto;
                 white-space: nowrap;
                 width: calc(100% + 30px);
@@ -303,7 +353,7 @@
                 scrollbar-width: none;
                 -webkit-overflow-scrolling: touch;
             }
-            .filter-chips::-webkit-scrollbar { display: none; }
+            .filter-links::-webkit-scrollbar { display: none; }
             
             .product-card-actions {
                 opacity: 1;
@@ -336,25 +386,49 @@
         </div>
     </section>
 
-    <!-- Main -->
+    <!-- Hot Collection Section -->
+    <section class="collection-section">
+        <div class="container">
+            <div class="collection-header">
+                <p>Hot Trends {{ now()->format('Y') }}</p>
+                <h2>Bộ sưu tập mới</h2>
+                <div style="width: 50px; height: 1px; background: #000; margin: 20px auto;"></div>
+            </div>
+            <div class="row">
+                @foreach($hotProducts as $item)
+                    <div class="col-md-4">
+                        <div class="collection-card">
+                            <a href="{{ route('fe.product.detail', $item->slug) }}">
+                                <img src="{{ $item->images ?? asset('img/default.jpg') }}" alt="{{ $item->name }}">
+                                <div style="margin-top: 15px; text-align: center;">
+                                    <h4 style="font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: #000;">{{ $item->name }}</h4>
+                                    <p style="font-size: 12px; font-weight: 600;">{{ number_format($item->price, 0, ',', '.') }}₫</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    
     <main class="container">
         <!-- Filters -->
-        <div class="filters d-flex justify-content-between align-items-end flex-wrap mb-4">
-            <div class="d-flex align-items-center">
-                <span class="filter-label d-none d-md-inline-block">Bộ lọc:</span>
-                <div class="filter-chips d-flex align-items-center">
+        <div class="filters d-flex justify-content-between align-items-center flex-wrap">
+            <div class="d-flex align-items-center overflow-auto scrollbar-hide">
+                <div class="filter-links d-flex align-items-center">
                     <a href="{{ route('fe.home', request()->except(['category', 'page'])) }}" 
-                       class="chip {{ !request('category') ? 'active' : '' }}">Tất cả</a>
+                       class="filter-link {{ !request('category') ? 'active' : '' }}">Tất cả</a>
                     @foreach($categories as $cat)
                         <a href="{{ route('fe.home', array_merge(request()->query(), ['category' => $cat->id])) }}" 
-                           class="chip {{ request('category') == $cat->id ? 'active' : '' }}">
+                           class="filter-link {{ request('category') == $cat->id ? 'active' : '' }}">
                             {{ $cat->name }}
                         </a>
                     @endforeach
                 </div>
             </div>
             
-            <div class="d-flex align-items-center gap-4 flex-wrap mt-4 mt-md-0">
+            <div class="d-flex align-items-center gap-4 flex-wrap mt-3 mt-lg-0">
                 <p class="product-count mb-0 d-none d-lg-block" id="productCount">{{ $products->total() }} sản phẩm</p>
                 
                 <form action="{{ route('fe.home') }}" method="GET" class="search-box">
@@ -422,6 +496,18 @@
         <div class="text-center mt-4 mb-5">
             <a href="{{ route('fe.products.all') }}" class="btn-view-all">Xem tất cả sản phẩm</a>
         </div>
+
+        <!-- Newsletter -->
+        <section class="newsletter-section">
+            <div class="container">
+                <h2 style="letter-spacing: 5px; font-weight: 300; text-transform: uppercase; margin-bottom: 20px;">Tham gia cùng Nhà Bi</h2>
+                <p style="color: #ccc; font-size: 13px; letter-spacing: 1px; margin-bottom: 40px;">Nhận thông báo về bộ sưu tập mới và các ưu đãi đặc quyền sớm nhất.</p>
+                <div class="d-flex justify-content-center">
+                    <input type="email" placeholder="ĐỊA CHỈ EMAIL CỦA BẠN" style="background: transparent; border: none; border-bottom: 1px solid #555; color: #fff; padding: 10px; width: 300px; font-size: 11px; outline: none;">
+                    <button class="btn-hero" style="margin-top: 0; padding: 10px 30px; border-color: #fff;">Đăng ký</button>
+                </div>
+            </div>
+        </section>
     </main>
 @endsection
 @push('scripts')

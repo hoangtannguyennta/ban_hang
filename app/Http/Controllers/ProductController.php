@@ -51,7 +51,12 @@ class ProductController extends Controller
         $slides = Slide::where('is_active', true)->orderBy('order')->get();
         $categories = Category::latest()->take(5)->get();
 
-        return view('fe.index', compact('products', 'slides', 'categories'));
+        // Lấy 3 sản phẩm có tổng số lượng đặt hàng (quantity) nhiều nhất
+        $hotProducts = Product::withSum('orderItems', 'quantity')
+            ->orderByDesc('order_items_sum_quantity')
+            ->take(3)->get();
+
+        return view('fe.index', compact('products', 'slides', 'categories', 'hotProducts'));
     }
 
     public function show($slug)
