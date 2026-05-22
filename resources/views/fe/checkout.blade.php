@@ -83,6 +83,7 @@
         background: transparent;
         border: none;
         box-shadow: none;
+        padding: 20px;
         /* Bỏ shadow để trông tiệp vào nền */
     }
 
@@ -158,6 +159,19 @@
         border-left: 1px solid #eee;
         border-right: 1px solid #eee;
     }
+
+    .summary-remove {
+        background: none;
+        border: none;
+        color: #888;
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 0;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+    .summary-remove:hover { color: #c0392b; }
 
     /* 5. Tổng thanh toán: To, rõ, không rườm rà */
     .checkout-total-row {
@@ -339,7 +353,10 @@
             <div class="summary-item">
                 <img src="${item.image}" alt="${item.name}" class="summary-product-img">
                 <div class="summary-product-info">
-                    <span class="summary-product-name">${item.name} ${item.size ? `<small class="text-muted">(Size: ${item.size})</small>` : ''}</span>
+                    <div class="d-flex justify-content-between align-items-start">
+                        <span class="summary-product-name">${item.name} ${item.size ? `<small class="text-muted">(Size: ${item.size})</small>` : ''}</span>
+                        <button type="button" class="summary-remove btn-remove-item" data-id="${item.id}" data-size="${item.size || ''}">Xóa</button>
+                    </div>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="summary-qty-selector">
                             <button type="button" class="summary-qty-btn btn-minus" data-id="${item.id}" data-size="${item.size || ''}">−</button>
@@ -381,6 +398,22 @@
                         cart[index].qty--;
                     }
                     localStorage.setItem('cart', JSON.stringify(cart));
+                    renderSummary();
+                    if (typeof updateCartUI === 'function') updateCartUI();
+                }
+            });
+
+            // Xử lý xóa sản phẩm khỏi giỏ hàng ngay tại trang checkout
+            $(document).on('click', '.btn-remove-item', function() {
+                const id = $(this).data('id');
+                const size = $(this).data('size') || null;
+                
+                cart = cart.filter(item => !(item.id == id && (item.size == size || (!item.size && !size))));
+                localStorage.setItem('cart', JSON.stringify(cart));
+                
+                if (cart.length === 0) {
+                    window.location.href = "{{ route('fe.home') }}";
+                } else {
                     renderSummary();
                     if (typeof updateCartUI === 'function') updateCartUI();
                 }
