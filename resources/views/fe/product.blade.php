@@ -173,28 +173,36 @@
         }
         .product-card:hover .hover-img { opacity: 1; }
         
-        .add-to-cart-btn {
+        /* Hover Actions Style */
+        .product-card-actions {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            background: #000;
-            color: #fff;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(100%);
+            transition: all 0.4s ease;
+            opacity: 0;
+            z-index: 5;
+        }
+        .product-card:hover .product-card-actions {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .p-action-btn {
             border: none;
-            padding: 15px;
+            padding: 12px;
             text-transform: uppercase;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
             letter-spacing: 1px;
-            opacity: 0;
-            transform: translateY(100%);
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            text-align: center;
+            text-decoration: none !important;
+            transition: all 0.3s;
         }
-        .product-card:hover .add-to-cart-btn { opacity: 1; transform: translateY(0); }
+        .p-action-btn.view { background: rgba(255,255,255,0.9); color: #000; }
+        .p-action-btn.add { background: #000; color: #fff; }
         
         .card-name a { font-weight: 600; text-transform: uppercase; font-size: 13px; color: #000; text-decoration: none; letter-spacing: 0.5px; }
         .price-sale { font-weight: 500; color: #000; font-size: 14px; }
@@ -298,18 +306,17 @@
                             <img src="{{ $item->images ?? asset('img/default.jpg') }}" class="main-img" alt="{{ $item->name }}" loading="lazy" />
                             <img src="{{ $item->hover_image ?? ($item->images ?? asset('img/default.jpg')) }}" class="hover-img" alt="{{ $item->name }}" loading="lazy" />
                         </a>
-                        <button class="add-to-cart-btn btn-add-to-cart w-50" style="margin-bottom: 15px; left: 25%;"
-                            data-id="{{ $item->id }}"
-                            data-name="{{ $item->name }}" 
-                            data-price="{{ $item->price }}"
-                            data-image="{{ $item->images ?? asset('img/default.jpg') }}">
-                            <svg style="width:16px; height:16px" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
-                                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-                                <line x1="3" y1="6" x2="21" y2="6" />
-                                <path d="M16 10a4 4 0 01-8 0" />
-                            </svg>
-                            Thêm vào giỏ
-                        </button>
+                        <div class="product-card-actions">
+                            <a href="{{ route('fe.product.detail', $item->slug) }}" class="p-action-btn view">Xem chi tiết</a>
+                            <button class="p-action-btn add btn-add-to-cart" 
+                                data-id="{{ $item->id }}"
+                                data-name="{{ $item->name }}" 
+                                data-price="{{ $item->price }}"
+                                data-image="{{ $item->images ?? asset('img/default.jpg') }}"
+                                data-sizes="{{ json_encode($item->sizes) }}">
+                                Thêm vào giỏ
+                            </button>
+                        </div>
                     </div>
                     <div class="card-info">
                         <h3 class="card-name">
@@ -406,26 +413,6 @@
 
                 localStorage.setItem('cart', JSON.stringify(cart));
                 window.location.href = "{{ route('fe.checkout') }}";
-            });
-
-            // Thêm vào giỏ hàng cho các sản phẩm liên quan
-            $(document).on('click', '.btn-add-to-cart', function() {
-                let cart = JSON.parse(localStorage.getItem('cart')) || [];
-                const id = $(this).data('id');
-                const name = $(this).data('name');
-                const price = $(this).data('price');
-                const image = $(this).data('image');
-
-                const existingItem = cart.find(item => item.id == id && !item.size);
-                if (existingItem) {
-                    existingItem.qty += 1;
-                } else {
-                    cart.push({ id, name, price, image, qty: 1, size: null });
-                }
-
-                localStorage.setItem('cart', JSON.stringify(cart));
-                updateCartUI();
-                toggleCart();
             });
         });
     </script>
