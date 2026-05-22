@@ -56,7 +56,13 @@
                             <div class="col-md-6 mb-3">
                                 <label for="price" class="form-label fw-semibold">Giá bán (VNĐ)</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control @error('price') is-invalid @enderror" name="price" id="price" value="{{ old('price', $product->price) }}" step="0.01" required>
+                                    <input type="text" 
+                                        class="form-control @error('price') is-invalid @enderror" 
+                                        name="price" 
+                                        id="price" 
+                                        value="{{ old('price', $product->price ? number_format($product->price, 0, ',', '.') : '') }}" 
+                                        placeholder="Ví dụ: 1.000.000" 
+                                        required>
                                     <span class="input-group-text">₫</span>
                                 </div>
                                 @error('price')
@@ -131,6 +137,17 @@
             container.classList.add('d-none');
             if (currentContainer) currentContainer.style.opacity = '1';
         }
+    }
+
+// Tự động định dạng dấu chấm phân cách hàng ngàn khi người dùng nhập giá
+    const priceInput = document.getElementById('price');
+    if (priceInput) {
+        priceInput.addEventListener('input', function(e) {
+            // Loại bỏ tất cả ký tự không phải số
+            let value = e.target.value.replace(/\D/g, "");
+            // Thêm dấu chấm phân cách hàng ngàn
+            e.target.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        });
     }
 </script>
 @endpush

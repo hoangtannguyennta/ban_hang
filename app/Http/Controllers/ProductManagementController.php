@@ -100,6 +100,11 @@ class ProductManagementController extends Controller
 
     public function store(Request $request)
     {
+        // Loại bỏ dấu chấm phân cách hàng ngàn trước khi validate
+        if ($request->filled('price')) {
+            $request->merge(['price' => str_replace('.', '', $request->price)]);
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -141,6 +146,11 @@ class ProductManagementController extends Controller
 
     public function update(Request $request, Product $product)
     {
+        // Loại bỏ dấu chấm phân cách hàng ngàn trước khi validate
+        if ($request->filled('price')) {
+            $request->merge(['price' => str_replace('.', '', $request->price)]);
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
