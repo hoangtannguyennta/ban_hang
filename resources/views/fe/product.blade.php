@@ -157,9 +157,21 @@
             gap: 30px;
         }
         .product-card { border: none; transition: all 0.3s ease; position: relative; }
-        .card-image { position: relative; overflow: hidden; background: #f9f9f9; }
-        .card-image img { width: 100%; transition: transform 0.5s ease; }
-        .product-card:hover img { transform: scale(1.05); }
+        .card-image { position: relative; overflow: hidden; background: #fcfcfc; aspect-ratio: 3/4; }
+        .card-image img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            transition: opacity 0.5s ease; 
+        }
+        .card-image .hover-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            z-index: 1;
+        }
+        .product-card:hover .hover-img { opacity: 1; }
         
         .add-to-cart-btn {
             position: absolute;
@@ -283,7 +295,8 @@
                 <article class="product-card">
                     <div class="card-image">
                         <a href="{{ route('fe.product.detail', $item->slug) }}">
-                            <img src="{{ $item->images ?? asset('img/default.jpg') }}" alt="{{ $item->name }}" loading="lazy" />
+                            <img src="{{ $item->images ?? asset('img/default.jpg') }}" class="main-img" alt="{{ $item->name }}" loading="lazy" />
+                            <img src="{{ $item->hover_image ?? ($item->images ?? asset('img/default.jpg')) }}" class="hover-img" alt="{{ $item->name }}" loading="lazy" />
                         </a>
                         <button class="add-to-cart-btn btn-add-to-cart w-50" style="margin-bottom: 15px; left: 25%;"
                             data-id="{{ $item->id }}"

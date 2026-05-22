@@ -67,10 +67,18 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: opacity 0.5s ease;
+            backface-visibility: hidden;
         }
-        .product-card:hover .card-image img {
-            transform: scale(1.08);
+        .card-image .hover-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            z-index: 1;
+        }
+        .product-card:hover .hover-img {
+            opacity: 1;
         }
         .card-info {
             padding: 20px 0;
@@ -124,36 +132,38 @@
             outline: none;
         }
 
-        /* --- Hover Button Effect --- */
-        .add-to-cart-btn {
+        /* --- Hover Actions Style --- */
+        .product-card-actions {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            background: #000;
-            color: #fff;
-            border-radius: 0 !important;
-            border: none;
-            padding: 15px;
-            text-transform: uppercase;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            opacity: 0;
-            transform: translateY(100%);
-            transition: var(--transition-smooth);
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            z-index: 3;
+            flex-direction: column;
+            transform: translateY(100%);
+            transition: all 0.4s ease;
+            opacity: 0;
+            z-index: 5;
         }
-        
+        .product-card:hover .product-card-actions {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .p-action-btn {
+            border: none;
+            padding: 12px;
+            text-transform: uppercase;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-align: center;
+            text-decoration: none !important;
+            transition: all 0.3s;
+        }
+        .p-action-btn.view { background: rgba(255,255,255,0.9); color: #000; }
+        .p-action-btn.add { background: #000; color: #fff; }
+
         @media (min-width: 992px) {
-            .product-card:hover .add-to-cart-btn {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .product-grid {
@@ -295,11 +305,13 @@
             }
             .filter-chips::-webkit-scrollbar { display: none; }
             
-            .add-to-cart-btn {
+            .product-card-actions {
                 opacity: 1;
                 transform: translateY(0);
+            }
+            .p-action-btn {
                 padding: 10px;
-                font-size: 9px;
+                font-size: 8px;
             }
         }
     </style>
@@ -369,22 +381,25 @@
                 <article class="product-card">
                     <div class="card-image">
                         <a href="{{ route('fe.product.detail', $product->slug) }}">
-                            <img src="{{ $product->images ?? asset('img/default.jpg') }}"
-                                alt="{{ $product->name }}" loading="lazy" />
+                            <img src="{{ $product->images ?? asset('img/default.jpg') }}" 
+                                 class="main-img" alt="{{ $product->name }}" loading="lazy" />
+                            <img src="{{ $product->hover_image ?? ($product->images ?? asset('img/default.jpg')) }}" 
+                                 class="hover-img" alt="{{ $product->name }}" loading="lazy" />
                         </a>
                         @if ($product->price < 1000000)
                             <span class="badge-sale" style="background: #ff4757;">SALE</span>
                         @endif
-                        <button class="add-to-cart-btn btn-add-to-cart" data-id="{{ $product->id }}"
-                            data-name="{{ $product->name }}" data-price="{{ $product->price }}"
-                            data-image="{{ $product->images ?? asset('img/default.jpg') }}">
-                            <svg style="width:16px; height:16px" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
-                                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-                                <line x1="3" y1="6" x2="21" y2="6" />
-                                <path d="M16 10a4 4 0 01-8 0" />
-                            </svg>
-                            Thêm vào giỏ
-                        </button>
+                        <div class="product-card-actions">
+                            <a href="{{ route('fe.product.detail', $product->slug) }}" class="p-action-btn view">Xem chi tiết</a>
+                            <button class="p-action-btn add btn-add-to-cart" 
+                                data-id="{{ $product->id }}"
+                                data-name="{{ $product->name }}" 
+                                data-price="{{ $product->price }}"
+                                data-image="{{ $product->images ?? asset('img/default.jpg') }}"
+                                data-sizes="{{ json_encode($product->sizes) }}">
+                                Thêm vào giỏ
+                            </button>
+                        </div>
                     </div>
                     <div class="card-info">
                         <h3 class="card-name">
@@ -419,35 +434,13 @@
             window.location.href = url.toString();
         }
 
-        $(document).ready(function() {
-            // Xử lý thêm vào giỏ
-            $(document).on('click', '.btn-add-to-cart', function() {
-                let cart = JSON.parse(localStorage.getItem('cart')) || [];
-                const id = $(this).data('id');
-                const name = $(this).data('name');
-                const price = $(this).data('price');
-                const image = $(this).data('image');
-
-                const existingItem = cart.find(item => item.id == id && !item.size);
-                if (existingItem) {
-                    existingItem.qty += 1;
-                } else {
-                    cart.push({ id, name, price, image, qty: 1, size: null });
-                }
-
-                localStorage.setItem('cart', JSON.stringify(cart));
-                updateCartUI();
-                toggleCart();
-            });
-
-            // Khởi tạo Slick Slider
-            $('.banner-slider').slick({
-                autoplay: true,
-                autoplaySpeed: 3000,
-                dots: true,
-                arrows: true,
-                infinite: true
-            });
+        // Khởi tạo Slick Slider
+        $('.banner-slider').slick({
+            autoplay: true,
+            autoplaySpeed: 3000,
+            dots: true,
+            arrows: true,
+            infinite: true
         });
     </script>
 @endpush

@@ -43,7 +43,7 @@
     }
 </style>
 <div class="thankyou-wrapper container">
-    <div class="thankyou-card text-center">
+    <div class="thankyou-card text-center mb-5">
         <div class="success-icon">
             <i class="fas fa-check"></i>
         </div>

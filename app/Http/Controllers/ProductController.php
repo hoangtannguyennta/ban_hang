@@ -127,7 +127,7 @@ class ProductController extends Controller
             $query->where('price', '<=', $request->max_price);
         }
 
-        $products = $query->latest()->paginate(5)->withQueryString();
+        $products = $query->latest()->paginate(6)->withQueryString();
         $categories = Category::latest()->take(5)->get();
 
         return view('fe.productAll', compact('products', 'categories'));

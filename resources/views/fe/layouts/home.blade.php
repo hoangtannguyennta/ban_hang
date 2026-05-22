@@ -225,7 +225,33 @@
             border-color: #f5f5f5;
             background-color: #fff;
         }
+
+        /* Size Modal Custom */
+        .size-option {
+            border: 1px solid #ddd;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 60px;
+            text-align: center;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+        .size-option:hover { border-color: #000; }
+        .size-option.selected { background: #000; color: #fff; border-color: #000; }
         
+        .modal-product-img img {
+            width: 100%;
+            height: 550px;
+            object-fit: cover;
+        }
+        @media (max-width: 767px) {
+            .modal-product-img img {
+                height: 350px;
+            }
+        }
+
         /* Style cho phần chữ Hiển thị kết quả của Laravel */
         .custom-pagination nav .flex.justify-between.flex-1.sm\:hidden { display: none; } /* Ẩn navigation mobile mặc định của tailwind */
         .custom-pagination nav > div:first-child {
@@ -284,6 +310,45 @@
             </div>
         </div>
     </header>
+
+    <!-- Size Selection Modal -->
+    <div class="modal fade" id="sizeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" style="border-radius: 0; border: none;">
+                <div class="modal-body p-0 position-relative">
+                    <button type="button" class="btn-close position-absolute" data-bs-dismiss="modal" aria-label="Close" style="top: 15px; right: 15px; z-index: 10;"></button>
+                    <div class="row g-0">
+                        <!-- Left: Image -->
+                        <div class="col-md-6">
+                            <div class="modal-product-img bg-light">
+                                <img id="modalProductImage" src="" alt="">
+                            </div>
+                        </div>
+                        <!-- Right: Info -->
+                        <div class="col-md-6 p-4 p-lg-5 d-flex flex-column justify-content-center">
+                            <div id="modalProductInfo" class="mb-4">
+                                <h6 class="text-uppercase text-muted mb-3" style="letter-spacing: 2px; font-size: 11px;">Chọn kích cỡ</h6>
+                                <h3 id="modalProductName" class="fw-bold text-uppercase mb-2" style="letter-spacing: 1px;"></h3>
+                                <h4 id="modalProductPrice" class="text-gold-gradient fw-bold mb-0" style="font-size: 1.5rem;"></h4>
+                            </div>
+
+                            <div class="mb-4">
+                                <p class="small text-muted mb-3 text-uppercase" style="font-size: 10px; letter-spacing: 2px; font-weight: 700;">Kích cỡ khả dụng:</p>
+                                <div class="d-flex flex-wrap gap-2" id="sizeList">
+                                    <!-- Sizes injected here -->
+                                </div>
+                                <div id="sizeError" class="text-danger small mt-2" style="display:none;">Vui lòng chọn kích cỡ</div>
+                            </div>
+
+                            <button type="button" class="btn btn-dark w-100 py-3 text-uppercase fw-bold" 
+                                style="border-radius: 0; letter-spacing: 2px; font-size: 12px; height: 60px;" 
+                                id="btnConfirmAddToCart">Thêm vào giỏ hàng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Mobile Navigation -->
     <aside class="mobile-nav-sidebar" id="mobileNav">
@@ -387,8 +452,58 @@
             }
         }
 
+        // Global Add to Cart Logic
+        function addToCart(id, name, price, image, size) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const existingItem = cart.find(item => item.id == id && item.size == size);
+            if (existingItem) {
+                existingItem.qty += 1;
+            } else {
+                cart.push({ id, name, price, image, qty: 1, size });
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartUI();
+            toggleCart();
+        }
+
         $(document).ready(function() {
             updateCartUI();
+
+            // Handle Add to Cart button click
+            $(document).on('click', '.btn-add-to-cart', function() {
+                const data = $(this).data();
+                const sizes = data.sizes;
+
+                if (sizes && Array.isArray(sizes) && sizes.length > 0) {
+                    $('#modalProductName').text(data.name);
+                    $('#modalProductPrice').text(new Intl.NumberFormat('vi-VN').format(data.price) + '₫');
+                    $('#modalProductImage').attr('src', data.image);
+                    let sizeHtml = '';
+                    sizes.forEach(s => {
+                        sizeHtml += `<div class="size-option" data-size="${s}">${s}</div>`;
+                    });
+                    $('#sizeList').html(sizeHtml);
+                    $('#btnConfirmAddToCart').data(data);
+                    $('#sizeError').hide();
+                    $('#sizeModal').modal('show');
+                } else {
+                    addToCart(data.id, data.name, data.price, data.image, null);
+                }
+            });
+
+            $(document).on('click', '.size-option', function() {
+                $('.size-option').removeClass('selected');
+                $(this).addClass('selected');
+                $('#sizeError').hide();
+            });
+
+            $('#btnConfirmAddToCart').on('click', function() {
+                const size = $('.size-option.selected').data('size');
+                if (!size) { $('#sizeError').show(); return; }
+                const data = $(this).data();
+                addToCart(data.id, data.name, data.price, data.image, size);
+                $('#sizeModal').modal('hide');
+            });
 
             // Xử lý xóa sản phẩm khỏi giỏ hàng
             $(document).on('click', '.cart-remove', function() {
