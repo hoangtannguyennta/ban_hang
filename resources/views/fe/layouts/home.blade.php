@@ -228,27 +228,44 @@
 
         /* Size Modal Custom */
         .size-option {
-            border: 1px solid #ddd;
-            padding: 12px 20px;
+            border: 1px solid #e0e0e0;
+            padding: 10px 18px;
             cursor: pointer;
-            transition: all 0.3s;
-            min-width: 60px;
+            transition: all 0.25s ease;
+            min-width: 55px;
             text-align: center;
-            font-weight: 600;
+            font-weight: 500;
             text-transform: uppercase;
-            font-size: 13px;
+            font-size: 12px;
+            letter-spacing: 1px;
+            background: #fff;
+            color: #555;
         }
-        .size-option:hover { border-color: #000; }
-        .size-option.selected { background: #000; color: #fff; border-color: #000; }
+        .size-option:hover { 
+            border-color: #000; 
+            color: #000;
+        }
+        .size-option.selected { 
+            background: #000; 
+            color: #fff; 
+            border-color: #000; 
+        }
         
+        #sizeModal .modal-content {
+            box-shadow: 0 15px 50px rgba(0,0,0,0.1);
+            border: 1px solid #f0f0f0;
+        }
+
         .modal-product-img img {
             width: 100%;
-            height: 550px;
+            height: 500px;
             object-fit: cover;
+            display: block;
         }
+
         @media (max-width: 767px) {
             .modal-product-img img {
-                height: 350px;
+                height: 300px;
             }
         }
 
@@ -320,28 +337,28 @@
                     <div class="row g-0">
                         <!-- Left: Image -->
                         <div class="col-md-6">
-                            <div class="modal-product-img bg-light">
+                            <div class="modal-product-img h-100 bg-light">
                                 <img id="modalProductImage" src="" alt="">
                             </div>
                         </div>
                         <!-- Right: Info -->
-                        <div class="col-md-6 p-4 p-lg-5 d-flex flex-column justify-content-center">
-                            <div id="modalProductInfo" class="mb-4">
-                                <h6 class="text-uppercase text-muted mb-3" style="letter-spacing: 2px; font-size: 11px;">Chọn kích cỡ</h6>
-                                <h3 id="modalProductName" class="fw-bold text-uppercase mb-2" style="letter-spacing: 1px;"></h3>
-                                <h4 id="modalProductPrice" class="text-gold-gradient fw-bold mb-0" style="font-size: 1.5rem;"></h4>
+                        <div class="col-md-6 p-4 p-md-5 d-flex flex-column justify-content-center">
+                            <div id="modalProductInfo" class="mb-5">
+                                <h6 class="text-uppercase text-muted mb-3" style="letter-spacing: 3px; font-size: 10px; font-weight: 700;">Tùy chọn sản phẩm</h6>
+                                <h3 id="modalProductName" class="mb-3" style="font-family: var(--font-heading); font-size: 1.8rem; letter-spacing: 1px; color: #1a1a1a;"></h3>
+                                <h4 id="modalProductPrice" class="text-gold-gradient fw-bold mb-0" style="font-size: 1.4rem; letter-spacing: 1px;"></h4>
                             </div>
 
-                            <div class="mb-4">
-                                <p class="small text-muted mb-3 text-uppercase" style="font-size: 10px; letter-spacing: 2px; font-weight: 700;">Kích cỡ khả dụng:</p>
+                            <div class="mb-5">
+                                <p class="small text-muted mb-3 text-uppercase" style="font-size: 10px; letter-spacing: 2px; font-weight: 600;">Kích cỡ khả dụng:</p>
                                 <div class="d-flex flex-wrap gap-2" id="sizeList">
                                     <!-- Sizes injected here -->
                                 </div>
                                 <div id="sizeError" class="text-danger small mt-2" style="display:none;">Vui lòng chọn kích cỡ</div>
                             </div>
 
-                            <button type="button" class="btn btn-dark w-100 py-3 text-uppercase fw-bold" 
-                                style="border-radius: 0; letter-spacing: 2px; font-size: 12px; height: 60px;" 
+                            <button type="button" class="btn btn-dark w-100 text-uppercase" 
+                                style="border-radius: 0; letter-spacing: 3px; font-size: 11px; height: 55px; font-weight: 700;" 
                                 id="btnConfirmAddToCart">Thêm vào giỏ hàng</button>
                         </div>
                     </div>
