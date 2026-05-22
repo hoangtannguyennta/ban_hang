@@ -225,8 +225,21 @@
             border-color: #f5f5f5;
             background-color: #fff;
         }
-        /* Ẩn dòng text "Showing X to Y of Z results" của Laravel mặc định nếu có */
-        .custom-pagination nav > div:first-child { display: none !important; }
+        
+        /* Style cho phần chữ Hiển thị kết quả của Laravel */
+        .custom-pagination nav .flex.justify-between.flex-1.sm\:hidden { display: none; } /* Ẩn navigation mobile mặc định của tailwind */
+        .custom-pagination nav > div:first-child {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .custom-pagination nav p.text-sm.text-gray-700 {
+            font-size: 11px !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted) !important;
+            margin: 0;
+        }
+        .custom-pagination nav p.text-sm.text-gray-700 font { font-weight: 700; color: #000; }
     </style>
     @stack('styles')
 </head>

@@ -373,7 +373,7 @@
                     @endforelse
                 </div>
 
-                <div class="custom-pagination">
+                <div class="custom-pagination mt-5">
                     {{ $products->links() }}
                 </div>
             </div>

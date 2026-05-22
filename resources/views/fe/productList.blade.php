@@ -435,7 +435,7 @@
                     @endforelse
                 </div>
 
-                <div class="d-flex justify-content-center mt-5">
+                <div class="custom-pagination mt-5">
                     {{ $products->links() }}
                 </div>
             </div>
