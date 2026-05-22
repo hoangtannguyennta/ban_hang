@@ -75,9 +75,10 @@
             text-decoration: none;
         }
         .nav-links a.active {
-            border-bottom: 2px solid #fff;
+            border-bottom: 2px solid var(--gold);
             padding-bottom: 4px;
             font-weight: 800;
+            color: var(--gold);
         }
         .header-actions {
             display: flex;
