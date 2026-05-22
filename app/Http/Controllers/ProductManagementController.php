@@ -79,6 +79,15 @@ class ProductManagementController extends Controller
             $query->latest();
         }
 
+          // Lọc theo khoảng giá
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->min_price);
+        }
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+
+
         $products = $query->paginate(10);
         return view('products.index', compact('products'));
     }

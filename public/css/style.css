@@ -125,29 +125,10 @@ ul {
   flex-shrink: 0;
 }
 
-.logo img {
-  max-height: 75px;
-  filter: brightness(0) invert(1);
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-}
-
-.logo span {
-  background: linear-gradient(135deg, var(--gold), var(--gold-light));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  transition: all 0.3s ease;
-}
-
 .logo:hover img {
   transform: rotate(-2deg) scale(1.08);
   box-shadow: 0 4px 16px rgba(200, 151, 62, 0.2);
   background: linear-gradient(135deg, rgba(200, 151, 62, 0.2), rgba(200, 151, 62, 0.1));
-}
-
-.logo:hover span {
-  filter: brightness(1.1);
 }
 
 .nav-links {
@@ -245,15 +226,6 @@ ul {
 
 .slick-active .hero-slide-item img {
   transform: scale(1.1);
-}
-
-/* Lớp phủ tối để nổi bật chữ */
-.hero-slide-item::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
-  z-index: 2;
 }
 
 .hero-slider__copy {
@@ -380,7 +352,6 @@ ul {
   .hero-slider__copy {
     position: absolute;
     transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.85);
     padding: 1rem;
     border-radius: 0.5rem;
     left: 1rem;
@@ -468,7 +439,6 @@ ul {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
-  padding-bottom: 4rem;
 }
 
 @media (max-width: 1024px) {
@@ -652,14 +622,8 @@ ul {
 }
 
 /* ===== FOOTER ===== */
-.site-footer {
-  border-top: 1px solid var(--border);
-  padding: 3rem 0;
-  text-align: center;
-}
-
 .footer-logo {
-  font-family: var(--font-heading);
+  /* font-family will be handled by custom-header-footer.css */
   font-size: 1.3rem;
   font-weight: 700;
   letter-spacing: 0.15em;
@@ -690,6 +654,12 @@ ul {
 
 .footer-links a:hover {
   color: var(--gold);
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 3rem 0;
+  text-align: center;
 }
 
 .footer-copy {

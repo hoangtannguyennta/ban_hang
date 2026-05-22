@@ -74,6 +74,11 @@
             color: #fff;
             text-decoration: none;
         }
+        .nav-links a.active {
+            border-bottom: 2px solid #fff;
+            padding-bottom: 4px;
+            font-weight: 800;
+        }
         .header-actions {
             display: flex;
             align-items: center;
@@ -115,6 +120,11 @@
             margin-bottom: 20px;
             border-bottom: 1px solid #eee;
             padding-bottom: 10px;
+        }
+        .mobile-nav-sidebar a.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-left: 10px;
         }
 
         @media (max-width: 991px) {
@@ -173,6 +183,50 @@
             font-weight: 600;
             letter-spacing: 1px;
         }
+          /* --- Custom Pagination Style (Black & White) --- */
+        .custom-pagination {
+            margin-top: 60px;
+        }
+        .custom-pagination .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            list-style: none;
+            padding: 0;
+        }
+        .custom-pagination .page-item .page-link {
+            color: var(--primary-black);
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            padding: 10px 18px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: var(--transition-smooth);
+            border-radius: 0; /* Vuông vức sang trọng */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 45px;
+        }
+        .custom-pagination .page-item.active .page-link {
+            background-color: var(--primary-black);
+            border-color: var(--primary-black);
+            color: #fff;
+        }
+        .custom-pagination .page-item .page-link:hover {
+            background-color: var(--primary-black);
+            color: #fff;
+            border-color: var(--primary-black);
+        }
+        .custom-pagination .page-item.disabled .page-link {
+            color: #ccc;
+            border-color: #f5f5f5;
+            background-color: #fff;
+        }
+        /* Ẩn dòng text "Showing X to Y of Z results" của Laravel mặc định nếu có */
+        .custom-pagination nav > div:first-child { display: none !important; }
     </style>
     @stack('styles')
 </head>
@@ -180,7 +234,7 @@
 <body>
 
     <!-- Top Bar -->
-    <div class="top-bar" style="text-align: center; color: #fff;">Miễn phí vận chuyển cho đơn hàng từ 500.000₫</div>
+    {{-- <div class="top-bar" style="text-align: center; color: #fff;">Miễn phí vận chuyển cho đơn hàng từ 500.000₫</div> --}}
 
     <!-- Header -->
     <header class="site-header">
@@ -199,12 +253,14 @@
 
             <nav class="nav-links">
                 @foreach($categories as $category)
-                    <a href="{{ route('fe.category', $category->id) }}">{{ $category->name }}</a>
+                    <a href="{{ route('fe.category', $category->id) }}" 
+                       class="{{ (request()->routeIs('fe.category') && request()->route('id') == $category->id) ? 'active' : '' }}">
+                        {{ $category->name }}</a>
                 @endforeach
             </nav>
 
             <div class="header-actions">
-                <button class="cart-btn" onclick="toggleCart()">
+                <button class="cart-btn" onclick="toggleCart()" aria-label="Giỏ hàng">
                     <svg class="icon" viewBox="0 0 24 24">
                         <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
                         <line x1="3" y1="6" x2="21" y2="6" />
@@ -219,7 +275,9 @@
     <!-- Mobile Navigation -->
     <aside class="mobile-nav-sidebar" id="mobileNav">
         @foreach($categories as $category)
-            <a href="{{ route('fe.category', $category->id) }}">{{ $category->name }}</a>
+            <a href="{{ route('fe.category', $category->id) }}"
+               class="{{ (request()->routeIs('fe.category') && request()->route('id') == $category->id) ? 'active' : '' }}">
+                {{ $category->name }}</a>
         @endforeach
     </aside>
     <div class="cart-overlay" id="menuOverlay" onclick="toggleMenu()"></div>

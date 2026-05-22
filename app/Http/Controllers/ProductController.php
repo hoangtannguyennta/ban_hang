@@ -23,6 +23,14 @@ class ProductController extends Controller
             $query->where('category_id', $request->category);
         }
 
+        // Lọc theo khoảng giá
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->min_price);
+        }
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+
         // Sắp xếp
         switch ($request->sort) {
             case 'price-asc':
@@ -55,18 +63,71 @@ class ProductController extends Controller
         return view('fe.product', compact('product', 'relatedProducts', 'categories'));
     }
 
-    public function category($id)
+    public function category(Request $request, $id)
     {
         $category = Category::findOrFail($id);
-        $products = Product::where('category_id', $id)->latest()->paginate(12);
+        $query = Product::where('category_id', $id)->with('category');
+
+        // Tìm kiếm theo tên trong danh mục
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        // Lọc theo khoảng giá
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->min_price);
+        }
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+
+        // Sắp xếp sản phẩm
+        switch ($request->sort) {
+            case 'price-asc':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price-desc':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'name-asc':
+                $query->orderBy('name', 'asc');
+                break;
+            default:
+                $query->latest();
+                break;
+        }
+
+        $products = $query->paginate(12)->withQueryString();
         $categories = Category::latest()->take(5)->get();
 
         return view('fe.productList', compact('products', 'category', 'categories'));
     }
 
-    public function allProducts()
+    public function allProducts(Request $request)
     {
-        $products = Product::latest()->paginate(12);
+        
+        $query = Product::with('category');
+
+        // Xử lý tìm kiếm nếu có
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        // Lọc theo danh mục
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
+        }
+
+        // Lọc theo khoảng giá
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->min_price);
+        }
+
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+
+        $products = $query->latest()->paginate(10)->withQueryString();
         $categories = Category::latest()->take(5)->get();
 
         return view('fe.productAll', compact('products', 'categories'));

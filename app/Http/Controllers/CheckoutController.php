@@ -8,6 +8,8 @@ use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\QrCode;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderPlaced;
 
 class CheckoutController extends Controller
 {
@@ -57,6 +59,9 @@ class CheckoutController extends Controller
 
             DB::commit();
 
+            // Gửi email xác nhận nếu người dùng có cung cấp địa chỉ email
+            Mail::to('nguyenht.nta@gmail.com')->send(new OrderPlaced($order));
+            
             return response()->json([
                 'success' => true,
                 'redirect_url' => route('fe.checkout.success', $order->id)

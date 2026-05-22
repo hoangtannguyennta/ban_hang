@@ -11,10 +11,11 @@
             padding-bottom: 80px;
         }
         .breadcrumb {
-            font-size: 11px;
+            font-size: 10px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 40px;
+            letter-spacing: 2px;
+            margin-bottom: 50px;
+            padding-top: 20px;
             color: #888;
         }
         .breadcrumb a { color: #888; text-decoration: none; }
@@ -31,23 +32,24 @@
             width: 100%;
             height: auto;
             display: block;
-            background: #f9f9f9;
+            background: #fff;
         }
         .gallery-thumbnails {
-            display: flex;
-            gap: 15px;
-            margin-top: 15px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 10px;
         }
         .gallery-thumbnails img {
-            width: 80px;
-            height: 80px;
+            width: 100%;
+            aspect-ratio: 1;
             object-fit: cover;
             cursor: pointer;
-            border: 1px solid transparent;
+            opacity: 0.6;
             transition: 0.3s;
         }
         .gallery-thumbnails img.active {
-            border-color: #000;
+            opacity: 1;
         }
 
         .detail-info .detail-brand {
@@ -59,26 +61,18 @@
             display: block;
         }
         .detail-name {
-            font-size: 2.5rem;
-            font-weight: 700;
+            font-size: 2rem;
+            font-weight: 400;
             text-transform: uppercase;
-            line-height: 1.1;
+            line-height: 1.2;
+            letter-spacing: 4px;
             margin-bottom: 20px;
         }
-        .detail-stars {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-bottom: 25px;
-        }
-        .star-icon.filled { fill: #000; }
-        .reviews-count { font-size: 13px; color: #666; margin-left: 10px; }
-
         .detail-prices { margin-bottom: 30px; }
-        .price-sale { font-size: 1.8rem; font-weight: 500; color: #000; }
+        .price-sale { font-size: 1.5rem; font-weight: 600; color: #000; letter-spacing: 1px; }
 
         .detail-desc {
-            font-size: 15px;
+            font-size: 14px;
             line-height: 1.6;
             color: #444;
             margin-bottom: 40px;
@@ -89,7 +83,7 @@
         .quantity-selector {
             display: flex;
             align-items: center;
-            border: 1px solid #000;
+            border: 1px solid #eee;
             width: fit-content;
             margin-bottom: 30px;
         }
@@ -105,7 +99,8 @@
         .qty-value {
             width: 40px;
             text-align: center;
-            font-weight: 600;
+            font-weight: 400;
+            font-size: 14px;
         }
 
         .size-selector {

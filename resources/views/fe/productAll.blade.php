@@ -6,110 +6,388 @@
 
 @section('content')
     <style>
+        :root {
+            --primary-black: #1a1a1a;
+            --text-muted: #757575;
+            --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
         .all-products-header {
-            padding: 60px 0;
-            background: #f9f9f9;
+            padding: 80px 0 40px;
+            background: #fff;
             margin-bottom: 50px;
             text-align: center;
+            border-bottom: 1px solid #eee;
         }
 
         .all-products-header h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
+            font-size: 2rem;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            margin-bottom: 15px;
+            color: var(--primary-black);
+        }
+
+        .all-products-header p {
+            font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 2px;
+            color: var(--text-muted);
+        }
+
+        /* --- Modern Product Grid --- */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 40px 20px;
         }
 
         .product-card {
             border: none;
-            transition: all 0.3s ease;
+            background: transparent;
+            transition: var(--transition-smooth);
+        }
+
+        .card-image {
+            position: relative;
+            overflow: hidden;
+            background: #fcfcfc;
+            aspect-ratio: 3/4;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .product-card:hover .card-image img {
+            transform: scale(1.08);
+        }
+
+        .card-info {
+            padding: 15px 0;
+            text-align: left;
         }
 
         .card-name a {
-            font-weight: 600;
+            font-weight: 500;
             text-transform: uppercase;
-            font-size: 14px;
-            color: #000;
+            font-size: 13px;
+            color: var(--primary-black);
             text-decoration: none;
+            letter-spacing: 0.5px;
+            display: block;
+            margin-bottom: 5px;
         }
 
         .price-sale {
-            font-weight: 500;
-            color: #666;
-            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary-black);
+            font-size: 14px;
         }
 
+        /* --- Hover Button Effect --- */
         .add-to-cart-btn {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
             background: #000;
+            color: #fff;
             border-radius: 0;
+            border: none;
+            padding: 15px;
+            text-transform: uppercase;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
             opacity: 0;
-            transition: 0.3s;
+            transform: translateY(100%);
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            z-index: 3;
         }
 
         .product-card:hover .add-to-cart-btn {
             opacity: 1;
+            transform: translateY(0);
         }
 
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 30px;
+        @media (max-width: 768px) {
+        }
+
+        /* Sidebar Filter Style */
+        .filter-sidebar {
+            border-right: 1px solid #eee;
+            padding-right: 30px;
+        }
+        .filter-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--primary-black);
+            border-bottom: 2px solid #000;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+        .btn-filter {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+        .btn-filter:hover { background: #333; }
+
+        .filter-sidebar .form-control {
+            font-size: 12px;
+            border-radius: 0;
+            border: 1px solid #eee;
+            padding: 8px 12px;
+            width: 100%;
+            transition: border-color 0.3s ease;
+        }
+        .filter-sidebar .form-control:focus {
+            border-color: var(--primary-black);
+            box-shadow: none;
+            outline: none;
+        }
+
+        .filter-sidebar .search-box {
+            position: relative;
+        }
+        .filter-sidebar .search-box .search-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .filter-sidebar select.form-control {
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5L8 11L14 5'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 16px 12px;
+        }
+
+        .filter-radio-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--text-muted);
+            padding: 8px 0;
+            transition: var(--transition-smooth);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .filter-radio-label input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            margin-right: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .filter-radio-label input[type="radio"]:checked {
+            border: 5px solid var(--primary-black);
+        }
+        .filter-radio-label:hover, .filter-radio-label:has(input:checked) {
+            color: var(--primary-black);
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .filter-sidebar {
+                border-right: none;
+                border-bottom: 1px solid #eee;
+                padding-right: 0;
+                padding-bottom: 30px;
+                margin-bottom: 30px;
+            }
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px 10px;
+                width: 100%;
+            }
+            .all-products-header h1 { font-size: 1.5rem; }
+            .all-products-header { padding: 40px 0 20px; }
+
+            .add-to-cart-btn {
+                opacity: 1;
+                transform: translateY(0);
+                padding: 12px 5px;
+                font-size: 10px;
+                letter-spacing: 1px;
+            }
+
+            .card-info {
+                padding: 12px 0;
+            }
+            .card-name a {
+                font-size: 12px;
+            }
+            .price-sale {
+                font-size: 12px;
+            }
+            .card-image {
+                aspect-ratio: 3/4;
+            }
+            .card-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
         }
     </style>
 
     <header class="all-products-header">
         <div class="container">
             <h1>Tất cả sản phẩm</h1>
-            <p class="text-muted">Khám phá bộ sưu tập mới nhất của chúng tôi</p>
+            <p>Khám phá bộ sưu tập mới nhất của chúng tôi</p>
         </div>
     </header>
 
     <main class="container mb-5">
-        <div class="product-grid">
-            @forelse ($products as $product)
-                <article class="product-card">
-                    <div class="card-image">
-                        <a href="{{ route('fe.product.detail', $product->slug) }}">
-                            <img src="{{ $product->images ?? asset('img/default.jpg') }}" alt="{{ $product->name }}"
-                                loading="lazy" />
-                        </a>
-                        <button class="add-to-cart-btn btn-add-to-cart" data-id="{{ $product->id }}"
-                            data-name="{{ $product->name }}" data-price="{{ $product->price }}"
-                            data-image="{{ $product->images ?? asset('img/default.jpg') }}">
-                            <svg style="width:16px; height:16px" viewBox="0 0 24 24" stroke="currentColor" fill="none"
-                                stroke-width="2">
-                                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-                                <line x1="3" y1="6" x2="21" y2="6" />
-                                <path d="M16 10a4 4 0 01-8 0" />
-                            </svg>
-                            Thêm vào giỏ
-                        </button>
+        <div class="row">
+            <!-- Sidebar bên trái -->
+            <aside class="col-lg-3 filter-sidebar">
+                <form action="{{ route('fe.products.all') }}" method="GET" id="filterForm">
+                    <!-- Lọc theo giá -->
+                    <div class="mb-5">
+                        <h3 class="filter-title">Khoảng giá</h3>
+                        <div class="price-ranges d-flex flex-column">
+                            <label class="filter-radio-label">
+                                <input type="radio" name="price_range" value="" {{ !request('min_price') && !request('max_price') ? 'checked' : '' }} onclick="setPriceRange('', '')">
+                                Tất cả
+                            </label>
+                            <label class="filter-radio-label">
+                                <input type="radio" name="price_range" value="0-500" {{ request('max_price') == 500000 ? 'checked' : '' }} onclick="setPriceRange('', 500000)">
+                                Dưới 500.000₫
+                            </label>
+                            <label class="filter-radio-label">
+                                <input type="radio" name="price_range" value="500-1000" {{ request('min_price') == 500000 && request('max_price') == 1000000 ? 'checked' : '' }} onclick="setPriceRange(500000, 1000000)">
+                                500.000₫ - 1.000.000₫
+                            </label>
+                            <label class="filter-radio-label">
+                                <input type="radio" name="price_range" value="1000-2000" {{ request('min_price') == 1000000 && request('max_price') == 2000000 ? 'checked' : '' }} onclick="setPriceRange(1000000, 2000000)">
+                                1.000.000₫ - 2.000.000₫
+                            </label>
+                            <label class="filter-radio-label">
+                                <input type="radio" name="price_range" value="2000+" {{ request('min_price') == 2000000 ? 'checked' : '' }} onclick="setPriceRange(2000000, '')">
+                                Trên 2.000.000₫
+                            </label>
+                        </div>
+                        
+                        <input type="hidden" name="min_price" id="min_price" value="{{ request('min_price') }}">
+                        <input type="hidden" name="max_price" id="max_price" value="{{ request('max_price') }}">
                     </div>
-                    <div class="card-info mt-3">
-                        <h3 class="card-name">
-                            <a href="{{ route('fe.product.detail', $product->slug) }}">{{ $product->name }}</a>
-                        </h3>
-                        <div class="card-prices">
-                            <span class="price-sale">{{ number_format($product->price, 0, ',', '.') }}₫</span>
+
+                    <!-- Tìm kiếm theo tên -->
+                    <div class="mb-5">
+                        <h3 class="filter-title">Tìm kiếm</h3>
+                        <div class="search-box">
+                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Tên sản phẩm..." class="form-control">
+                            <span class="search-icon"><i class="fas fa-search"></i></span>
                         </div>
                     </div>
-                </article>
-            @empty
-                <div class="col-12 text-center py-5">
-                    <p>Hiện chưa có sản phẩm nào.</p>
-                    <a href="{{ route('fe.home') }}" class="btn btn-dark">Quay lại trang chủ</a>
-                </div>
-            @endforelse
-        </div>
 
-        <div class="d-flex justify-content-center mt-5">
-            {{ $products->links() }}
+                    <!-- Sắp xếp -->
+                    <div class="mb-5">
+                        <h3 class="filter-title">Sắp xếp theo</h3>
+                        <select name="sort" class="form-control">
+                            <option value="" {{ request('sort') == '' ? 'selected' : '' }}>Mặc định</option>
+                            <option value="price-asc" {{ request('sort') == 'price-asc' ? 'selected' : '' }}>Giá: Thấp đến Cao</option>
+                            <option value="price-desc" {{ request('sort') == 'price-desc' ? 'selected' : '' }}>Giá: Cao đến Thấp</option>
+                            <option value="name-asc" {{ request('sort') == 'name-asc' ? 'selected' : '' }}>Tên: A - Z</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-filter w-100">Áp dụng bộ lọc</button>
+                    
+                    @if(request()->hasAny(['search', 'sort', 'min_price', 'max_price']))
+                        <a href="{{ route('fe.products.all') }}" 
+                           class="text-center d-block mt-3 small text-muted text-uppercase" 
+                           style="letter-spacing: 1px; text-decoration: none;">Xóa tất cả bộ lọc</a>
+                    @endif
+                </form>
+            </aside>
+
+            <!-- Danh sách sản phẩm bên phải -->
+            <div class="col-lg-9">
+                <div class="product-grid">
+                    @forelse ($products as $product)
+                        <article class="product-card">
+                            <div class="card-image">
+                                <a href="{{ route('fe.product.detail', $product->slug) }}">
+                                    <img src="{{ $product->images ?? asset('img/default.jpg') }}" alt="{{ $product->name }}"
+                                        loading="lazy" />
+                                </a>
+                                <button class="add-to-cart-btn btn-add-to-cart" data-id="{{ $product->id }}"
+                                    data-name="{{ $product->name }}" data-price="{{ $product->price }}"
+                                    data-image="{{ $product->images ?? asset('img/default.jpg') }}">
+                                    <svg style="width:16px; height:16px" viewBox="0 0 24 24" stroke="currentColor" fill="none"
+                                        stroke-width="2">
+                                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                                        <line x1="3" y1="6" x2="21" y2="6" />
+                                        <path d="M16 10a4 4 0 01-8 0" />
+                                    </svg>
+                                    Thêm vào giỏ
+                                </button>
+                            </div>
+                            <div class="card-info mt-3">
+                                <h3 class="card-name">
+                                    <a href="{{ route('fe.product.detail', $product->slug) }}">{{ $product->name }}</a>
+                                </h3>
+                                <div class="card-prices">
+                                    <span class="price-sale">{{ number_format($product->price, 0, ',', '.') }}₫</span>
+                                </div>
+                            </div>
+                        </article>
+                    @empty
+                        <div class="col-12 text-center py-5">
+                            <p>Hiện chưa có sản phẩm nào phù hợp.</p>
+                            <a href="{{ route('fe.products.all') }}" class="btn btn-dark">Xem tất cả sản phẩm</a>
+                        </div>
+                    @endforelse
+                </div>
+
+                <div class="custom-pagination">
+                    {{ $products->links() }}
+                </div>
+            </div>
         </div>
     </main>
 @endsection
 
 @push('scripts')
     <script>
+        function setPriceRange(min, max) {
+            document.getElementById('min_price').value = min;
+            document.getElementById('max_price').value = max;
+        }
+
         $(document).ready(function() {
             // Xử lý thêm vào giỏ hàng
             $(document).on('click', '.btn-add-to-cart', function() {
@@ -139,6 +417,9 @@
                 updateCartUI();
                 toggleCart();
             });
+
+            // Make applySort function globally accessible if needed by onchange attribute
+            window.applySort = applySort;
         });
     </script>
 @endpush
