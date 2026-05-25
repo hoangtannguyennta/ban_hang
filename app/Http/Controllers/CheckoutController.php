@@ -35,6 +35,7 @@ class CheckoutController extends Controller
             $fullAddress = implode(', ', array_filter([
                 $request->shipping_address,
                 $request->ward,
+                
                 $request->district,
                 $request->province
             ]));
