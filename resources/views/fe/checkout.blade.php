@@ -29,6 +29,16 @@
         color: #1a1a1a;
     }
 
+    /* Tùy chỉnh hiển thị cho thẻ select */
+    select.form-control {
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5L8 11L14 5'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 16px 12px;
+    }
+
     /* 2. Input Full-width & Tinh giản */
     .input-group-custom {
         position: relative;
@@ -273,12 +283,39 @@
                         </div>
                     </div>
 
-                    <div class="mb-5">
-                        <label class="form-label">Địa chỉ nhận hàng</label>
+                    <div class="row mb-4">
+                        <div class="col-md-4 mb-3 mb-md-0">
+                            <label class="form-label">Tỉnh / Thành phố</label>
+                            <div class="input-group-custom mb-0">
+                                <select name="province" id="province" class="form-control" required>
+                                    <option value="">Chọn Tỉnh/Thành</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3 mb-md-0">
+                            <label class="form-label">Quận / Huyện</label>
+                            <div class="input-group-custom mb-0">
+                                <select name="district" id="district" class="form-control" required disabled>
+                                    <option value="">Chọn Quận/Huyện</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Phường / Xã</label>
+                            <div class="input-group-custom mb-0">
+                                <select name="ward" id="ward" class="form-control" required disabled>
+                                    <option value="">Chọn Phường/Xã</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-5 mt-4">
+                        <label class="form-label">Số nhà, tên đường</label>
                         <div class="input-group-custom">
                             <i class="fas fa-map-marker-alt" style="top: 1.2rem; transform: none;"></i>
                             <textarea name="shipping_address" class="form-control" rows="3"
-                                placeholder="Địa chỉ cụ thể (Số nhà, đường, phường/xã...)" required></textarea>
+                                placeholder="Địa chỉ cụ thể (Số nhà, tên đường...)" required></textarea>
                         </div>
                     </div>
 
@@ -425,6 +462,54 @@
                     $('#qr_section').slideDown();
                 } else {
                     $('#qr_section').slideUp();
+                }
+            });
+
+            // Tải danh sách Tỉnh/Thành phố
+            const $province = $('#province');
+            const $district = $('#district');
+            const $ward = $('#ward');
+
+            fetch('https://provinces.open-api.vn/api/?depth=1')
+                .then(res => res.json())
+                .then(data => {
+                    data.forEach(p => {
+                        $province.append(`<option value="${p.name}" data-code="${p.code}">${p.name}</option>`);
+                    });
+                });
+
+            // Khi thay đổi Tỉnh/Thành -> Tải Quận/Huyện
+            $province.on('change', function() {
+                const code = $(this).find(':selected').data('code');
+                $district.empty().append('<option value="">Chọn Quận/Huyện</option>').prop('disabled', true);
+                $ward.empty().append('<option value="">Chọn Phường/Xã</option>').prop('disabled', true);
+
+                if (code) {
+                    fetch(`https://provinces.open-api.vn/api/p/${code}?depth=2`)
+                        .then(res => res.json())
+                        .then(data => {
+                            data.districts.forEach(d => {
+                                $district.append(`<option value="${d.name}" data-code="${d.code}">${d.name}</option>`);
+                            });
+                            $district.prop('disabled', false);
+                        });
+                }
+            });
+
+            // Khi thay đổi Quận/Huyện -> Tải Phường/Xã
+            $district.on('change', function() {
+                const code = $(this).find(':selected').data('code');
+                $ward.empty().append('<option value="">Chọn Phường/Xã</option>').prop('disabled', true);
+
+                if (code) {
+                    fetch(`https://provinces.open-api.vn/api/d/${code}?depth=2`)
+                        .then(res => res.json())
+                        .then(data => {
+                            data.wards.forEach(w => {
+                                $ward.append(`<option value="${w.name}" data-code="${w.code}">${w.name}</option>`);
+                            });
+                            $ward.prop('disabled', false);
+                        });
                 }
             });
 

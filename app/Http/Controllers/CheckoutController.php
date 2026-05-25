@@ -31,11 +31,14 @@ class CheckoutController extends Controller
 
         DB::beginTransaction();
         try {
+            // Gộp các trường địa chỉ thành một chuỗi duy nhất
+            $fullAddress = "{$request->shipping_address}, {$request->ward}, {$request->district}, {$request->province}";
+
             // 1. Tạo đơn hàng chính
             $order = Order::create([
                 'name' => $request->name,
                 'phone_number' => $request->phone_number,
-                'shipping_address' => $request->shipping_address,
+                'shipping_address' => $fullAddress,
                 'payment_method' => $request->payment_method, // 'cod' hoặc 'transfer'
                 'total_amount' => 0, 
                 'status' => 'pending'
