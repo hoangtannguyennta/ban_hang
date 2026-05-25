@@ -9,34 +9,6 @@
             --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        /* --- Minimalist Filters Custom --- */
-        .filters {
-            margin-bottom: 50px !important;
-            padding: 20px 0;
-            border-top: 1px solid #f5f5f5;
-            border-bottom: 1px solid #f5f5f5;
-        }
-        .filter-link {
-            display: inline-block;
-            color: #888;
-            padding: 8px 20px;
-            margin-right: 10px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-        }
-        .filter-link.active {
-            color: #000;
-            border: 1px solid #000;
-            font-weight: 700;
-        }
-        .filter-link:hover:not(.active) {
-            color: #000;
-        }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         
@@ -110,13 +82,14 @@
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            width: 150px;
+            width: 120px;
             background: transparent;
-            transition: border-color 0.3s;
+            transition: all 0.4s ease;
         }
         .search-box input:focus {
             outline: none;
             border-bottom-color: #000;
+            width: 180px;
         }
         
         .sort-select {
@@ -413,42 +386,12 @@
     </section>
     
     <main class="container">
-        <!-- Filters -->
-        <div class="filters d-flex justify-content-between align-items-center flex-wrap">
-            <div class="d-flex align-items-center overflow-auto scrollbar-hide">
-                <div class="filter-links d-flex align-items-center">
-                    <a href="{{ route('fe.home', request()->except(['category', 'page'])) }}" 
-                       class="filter-link {{ !request('category') ? 'active' : '' }}">Tất cả</a>
-                    @foreach($categories as $cat)
-                        <a href="{{ route('fe.home', array_merge(request()->query(), ['category' => $cat->id])) }}" 
-                           class="filter-link {{ request('category') == $cat->id ? 'active' : '' }}">
-                            {{ $cat->name }}
-                        </a>
-                    @endforeach
-                </div>
-            </div>
-            
-            <div class="d-flex align-items-center gap-4 flex-wrap mt-3 mt-lg-0">
-                <p class="product-count mb-0 d-none d-lg-block" id="productCount">{{ $products->total() }} sản phẩm</p>
-                
-                <form action="{{ route('fe.home') }}" method="GET" class="search-box">
-                    @if(request('category')) <input type="hidden" name="category" value="{{ request('category') }}"> @endif
-                    @if(request('sort')) <input type="hidden" name="sort" value="{{ request('sort') }}"> @endif
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="TÌM KIẾM...">
-                    <button type="submit" style="background:none; border:none; position: absolute; right: 5px; top: 50%; transform: translateY(-50%); color: #757575;">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </form>
-
-                <select class="sort-select" onchange="applySort(this.value)">
-                    <option value="featured" {{ request('sort') == 'featured' ? 'selected' : '' }}>Mặc định</option>
-                    <option value="price-asc" {{ request('sort') == 'price-asc' ? 'selected' : '' }}>Giá: Thấp - Cao</option>
-                    <option value="price-desc" {{ request('sort') == 'price-desc' ? 'selected' : '' }}>Giá: Cao - Thấp</option>
-                    <option value="name-asc" {{ request('sort') == 'name-asc' ? 'selected' : '' }}>Tên: A - Z</option>
-                </select>
-            </div>
+        <!-- Section Header -->
+        <div class="text-center mb-5">
+            <h2 style="font-size: 1.5rem; font-weight: 300; letter-spacing: 6px; text-transform: uppercase; color: #000; margin-bottom: 10px;">New Arrivals</h2>
+            <p style="font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #888;">Cập nhật xu hướng mỗi ngày cùng Nhà Bi</p>
         </div>
-        
+
         <!-- Product Grid -->
         <div class="product-grid" id="productGrid">
             @foreach ($products as $product)
@@ -512,14 +455,6 @@
 @endsection
 @push('scripts')
     <script>
-        function applySort(sortValue) {
-            const url = new URL(window.location.href);
-            url.searchParams.set('sort', sortValue);
-            // Reset trang về 1 khi đổi cách sắp xếp (nếu có phân trang)
-            if (url.searchParams.has('page')) url.searchParams.delete('page');
-            window.location.href = url.toString();
-        }
-
         // Khởi tạo Slick Slider
         $('.banner-slider').slick({
             autoplay: true,

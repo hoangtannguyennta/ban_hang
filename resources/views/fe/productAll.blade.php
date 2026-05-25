@@ -63,6 +63,7 @@
             transition: opacity 0.5s ease;
             backface-visibility: hidden;
         }
+
         .card-image .hover-img {
             position: absolute;
             top: 0;
@@ -70,6 +71,7 @@
             opacity: 0;
             z-index: 1;
         }
+
         .product-card:hover .hover-img {
             opacity: 1;
         }
@@ -109,10 +111,12 @@
             opacity: 0;
             z-index: 5;
         }
+
         .product-card:hover .product-card-actions {
             transform: translateY(0);
             opacity: 1;
         }
+
         .p-action-btn {
             border: none;
             padding: 12px;
@@ -123,17 +127,25 @@
             text-align: center;
             text-decoration: none !important;
         }
-        .p-action-btn.view { background: rgba(255,255,255,0.9); color: #000; }
-        .p-action-btn.add { background: #000; color: #fff; }
 
-        @media (max-width: 768px) {
+        .p-action-btn.view {
+            background: rgba(255, 255, 255, 0.9);
+            color: #000;
         }
+
+        .p-action-btn.add {
+            background: #000;
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {}
 
         /* Sidebar Filter Style */
         .filter-sidebar {
             border-right: 1px solid #eee;
             padding-right: 30px;
         }
+
         .filter-title {
             font-size: 11px;
             text-transform: uppercase;
@@ -145,6 +157,7 @@
             display: inline-block;
             padding-bottom: 5px;
         }
+
         .btn-filter {
             background: #000;
             color: #fff;
@@ -156,7 +169,10 @@
             cursor: pointer;
             transition: var(--transition-smooth);
         }
-        .btn-filter:hover { background: #333; }
+
+        .btn-filter:hover {
+            background: #333;
+        }
 
         .filter-sidebar .form-control {
             font-size: 12px;
@@ -166,6 +182,7 @@
             width: 100%;
             transition: border-color 0.3s ease;
         }
+
         .filter-sidebar .form-control:focus {
             border-color: var(--primary-black);
             box-shadow: none;
@@ -175,6 +192,7 @@
         .filter-sidebar .search-box {
             position: relative;
         }
+
         .filter-sidebar .search-box .search-icon {
             position: absolute;
             right: 12px;
@@ -205,6 +223,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
+
         .filter-radio-label input[type="radio"] {
             appearance: none;
             -webkit-appearance: none;
@@ -217,12 +236,56 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
+
         .filter-radio-label input[type="radio"]:checked {
             border: 5px solid var(--primary-black);
         }
-        .filter-radio-label:hover, .filter-radio-label:has(input:checked) {
+
+        .filter-radio-label:hover,
+        .filter-radio-label:has(input:checked) {
             color: var(--primary-black);
             font-weight: 700;
+        }
+
+                /* --- Minimalist Filters Custom --- */
+        .filters {
+            margin-bottom: 50px !important;
+            padding: 20px 0;
+            border-top: 1px solid #f5f5f5;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        .filter-link {
+            display: inline-block;
+            color: #999;
+            padding: 5px 0;
+            margin-right: 30px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .filter-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #000;
+            transition: width 0.3s ease;
+        }
+        .filter-link.active {
+            color: #000;
+            font-weight: 700;
+        }
+        .filter-link.active::after, .filter-link:hover::after {
+            width: 100%;
+        }
+        .filter-link:hover:not(.active) {
+            color: #000;
         }
 
         @media (max-width: 768px) {
@@ -233,18 +296,26 @@
                 padding-bottom: 30px;
                 margin-bottom: 30px;
             }
+
             .product-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 15px 10px;
                 width: 100%;
             }
-            .all-products-header h1 { font-size: 1.5rem; }
-            .all-products-header { padding: 40px 0 20px; }
+
+            .all-products-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .all-products-header {
+                padding: 40px 0 20px;
+            }
 
             .product-card-actions {
                 opacity: 1;
                 transform: translateY(0);
             }
+
             .p-action-btn {
                 padding: 10px;
                 font-size: 8px;
@@ -253,15 +324,19 @@
             .card-info {
                 padding: 12px 0;
             }
+
             .card-name a {
                 font-size: 12px;
             }
+
             .price-sale {
                 font-size: 12px;
             }
+
             .card-image {
                 aspect-ratio: 3/4;
             }
+
             .card-image img {
                 width: 100%;
                 height: 100%;
@@ -295,11 +370,13 @@
                                 Dưới 500.000₫
                             </label>
                             <label class="filter-radio-label">
-                                <input type="radio" name="price_range" value="500-1000" {{ request('min_price') == 500000 && request('max_price') == 1000000 ? 'checked' : '' }} onclick="setPriceRange(500000, 1000000)">
+                                <input type="radio" name="price_range" value="500-1000" {{ request('min_price') == 500000 && request('max_price') == 1000000 ? 'checked' : '' }}
+                                    onclick="setPriceRange(500000, 1000000)">
                                 500.000₫ - 1.000.000₫
                             </label>
                             <label class="filter-radio-label">
-                                <input type="radio" name="price_range" value="1000-2000" {{ request('min_price') == 1000000 && request('max_price') == 2000000 ? 'checked' : '' }} onclick="setPriceRange(1000000, 2000000)">
+                                <input type="radio" name="price_range" value="1000-2000" {{ request('min_price') == 1000000 && request('max_price') == 2000000 ? 'checked' : '' }}
+                                    onclick="setPriceRange(1000000, 2000000)">
                                 1.000.000₫ - 2.000.000₫
                             </label>
                             <label class="filter-radio-label">
@@ -307,7 +384,7 @@
                                 Trên 2.000.000₫
                             </label>
                         </div>
-                        
+
                         <input type="hidden" name="min_price" id="min_price" value="{{ request('min_price') }}">
                         <input type="hidden" name="max_price" id="max_price" value="{{ request('max_price') }}">
                     </div>
@@ -316,7 +393,8 @@
                     <div class="mb-5">
                         <h3 class="filter-title">Tìm kiếm</h3>
                         <div class="search-box">
-                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Tên sản phẩm..." class="form-control">
+                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Tên sản phẩm..."
+                                class="form-control">
                             <span class="search-icon"><i class="fas fa-search"></i></span>
                         </div>
                     </div>
@@ -326,18 +404,20 @@
                         <h3 class="filter-title">Sắp xếp theo</h3>
                         <select name="sort" class="form-control">
                             <option value="" {{ request('sort') == '' ? 'selected' : '' }}>Mặc định</option>
-                            <option value="price-asc" {{ request('sort') == 'price-asc' ? 'selected' : '' }}>Giá: Thấp đến Cao</option>
-                            <option value="price-desc" {{ request('sort') == 'price-desc' ? 'selected' : '' }}>Giá: Cao đến Thấp</option>
+                            <option value="price-asc" {{ request('sort') == 'price-asc' ? 'selected' : '' }}>Giá: Thấp đến Cao
+                            </option>
+                            <option value="price-desc" {{ request('sort') == 'price-desc' ? 'selected' : '' }}>Giá: Cao đến
+                                Thấp</option>
                             <option value="name-asc" {{ request('sort') == 'name-asc' ? 'selected' : '' }}>Tên: A - Z</option>
                         </select>
                     </div>
 
                     <button type="submit" class="btn-filter w-100">Áp dụng bộ lọc</button>
-                    
+
                     @if(request()->hasAny(['search', 'sort', 'min_price', 'max_price']))
-                        <a href="{{ route('fe.products.all') }}" 
-                           class="text-center d-block mt-3 small text-muted text-uppercase" 
-                           style="letter-spacing: 1px; text-decoration: none;">Xóa tất cả bộ lọc</a>
+                        <a href="{{ route('fe.products.all') }}"
+                            class="text-center d-block mt-3 small text-muted text-uppercase"
+                            style="letter-spacing: 1px; text-decoration: none;">Xóa tất cả bộ lọc</a>
                     @endif
                 </form>
             </aside>
@@ -349,17 +429,16 @@
                         <article class="product-card">
                             <div class="card-image">
                                 <a href="{{ route('fe.product.detail', $product->slug) }}">
-                                    <img src="{{ $product->images ?? asset('img/default.jpg') }}" 
-                                         class="main-img" alt="{{ $product->name }}" loading="lazy" />
-                                    <img src="{{ $product->hover_image ?? ($product->images ?? asset('img/default.jpg')) }}" 
-                                         class="hover-img" alt="{{ $product->name }}" loading="lazy" />
+                                    <img src="{{ $product->images ?? asset('img/default.jpg') }}" class="main-img"
+                                        alt="{{ $product->name }}" loading="lazy" />
+                                    <img src="{{ $product->hover_image ?? ($product->images ?? asset('img/default.jpg')) }}"
+                                        class="hover-img" alt="{{ $product->name }}" loading="lazy" />
                                 </a>
                                 <div class="product-card-actions">
-                                    <a href="{{ route('fe.product.detail', $product->slug) }}" class="p-action-btn view">Xem chi tiết</a>
-                                    <button class="p-action-btn add btn-add-to-cart" 
-                                        data-id="{{ $product->id }}"
-                                        data-name="{{ $product->name }}" 
-                                        data-price="{{ $product->price }}"
+                                    <a href="{{ route('fe.product.detail', $product->slug) }}" class="p-action-btn view">Xem chi
+                                        tiết</a>
+                                    <button class="p-action-btn add btn-add-to-cart" data-id="{{ $product->id }}"
+                                        data-name="{{ $product->name }}" data-price="{{ $product->price }}"
                                         data-image="{{ $product->images ?? asset('img/default.jpg') }}"
                                         data-sizes="{{ json_encode($product->sizes) }}">
                                         Thêm vào giỏ
@@ -398,7 +477,7 @@
             document.getElementById('max_price').value = max;
         }
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Make applySort function globally accessible if needed by onchange attribute
             window.applySort = applySort;
         });

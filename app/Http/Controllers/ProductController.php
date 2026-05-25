@@ -108,6 +108,7 @@ class ProductController extends Controller
         return view('fe.productList', compact('products', 'category', 'categories'));
     }
 
+
     public function allProducts(Request $request)
     {
         
