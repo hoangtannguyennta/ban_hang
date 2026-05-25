@@ -32,7 +32,12 @@ class CheckoutController extends Controller
         DB::beginTransaction();
         try {
             // Gộp các trường địa chỉ thành một chuỗi duy nhất
-            $fullAddress = "{$request->shipping_address}, {$request->ward}, {$request->district}, {$request->province}";
+            $fullAddress = implode(', ', array_filter([
+                $request->shipping_address,
+                $request->ward,
+                $request->district,
+                $request->province
+            ]));
 
             // 1. Tạo đơn hàng chính
             $order = Order::create([
