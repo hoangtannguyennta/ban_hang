@@ -188,7 +188,6 @@
             height: 80vh; 
             display: flex; 
             align-items: center; 
-            background: #000;
         }
         .hero-slide-item img { 
             position: absolute; 
@@ -197,7 +196,6 @@
             width: 100%; 
             height: 100%; 
             object-fit: cover; 
-            opacity: 0.6;
         }
         .hero-slider__copy { 
             position: relative; 

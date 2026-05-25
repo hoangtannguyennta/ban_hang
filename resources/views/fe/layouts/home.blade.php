@@ -45,8 +45,8 @@
             padding: 10px 0;
         }
         .header-inner {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
             max-width: 1300px;
             margin: 0 auto;
@@ -62,9 +62,12 @@
             justify-self: center;
             display: flex;
             align-items: center;
+            grid-column: 2;
         }
         .nav-links {
             display: flex;
+            grid-column: 1;
+            grid-row: 1;
         }
         .nav-links a {
             text-transform: uppercase;
@@ -85,6 +88,8 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            grid-column: 3;
+            justify-self: end;
         }
         .cart-btn, .menu-toggle {
             background: none;
@@ -95,6 +100,8 @@
         }
         .menu-toggle {
             display: none;
+            grid-column: 1;
+            grid-row: 1;
         }
 
         /* Mobile Nav Sidebar */
@@ -135,9 +142,6 @@
             }
             .menu-toggle {
                 display: block;
-            }
-            .header-inner {
-                grid-template-columns: auto 1fr auto;
             }
             .logo {
                 order: 2;
