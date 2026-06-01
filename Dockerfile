@@ -37,8 +37,9 @@ RUN composer install --no-interaction --optimize-autoloader --no-dev
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# 9. Mở cổng 80 (Cổng mặc định của Apache và thường dùng trên Render)
-EXPOSE 80
+# 9. Cấu hình lại để Apache tự động nhận Port linh hoạt từ Render cấp phát
+RUN sed -i 's/Listen 80/Listen ${PORT}/g' /etc/apache2/ports.conf
+RUN sed -i 's/<VirtualHost \*:80>/<VirtualHost *:${PORT}>/g' /etc/apache2/sites-available/*.conf
 
 # 10. Chạy Apache ở chế độ foreground
 CMD ["apache2-foreground"]
